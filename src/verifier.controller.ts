@@ -2,7 +2,7 @@
 // DO NOT EDIT //
 /////////////////
 
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { EncodedRequestBody } from './dto/encoded-request.dto';
 import { AttRequestNoMic } from './dto/request-no-mic';
 import { VerifierService } from './verifier.service';
@@ -18,8 +18,9 @@ export class VerifierController {
      * @param verifierBody
      * @returns
      */
+    @HttpCode(200)
     @Post()
-    verify(@Body() body: EncodedRequestBody): AttResponse {
+    async verify(@Body() body: EncodedRequestBody): Promise<AttResponse> {
         return this.verifierService.verifyEncodedRequest(body);
     }
 
@@ -28,8 +29,9 @@ export class VerifierController {
      * @param prepareResponseBody
      * @returns
      */
+    @HttpCode(200)
     @Post('prepareResponse')
-    prepareResponse(@Body() body: AttRequestNoMic): AttResponse {
+    async prepareResponse(@Body() body: AttRequestNoMic): Promise<AttResponse> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -37,8 +39,9 @@ export class VerifierController {
      * Tries to verify attestation request (given in JSON) without checking message integrity code, and if successful, it returns the correct message integrity code.
      * @param body
      */
+    @HttpCode(200)
     @Post('mic')
-    mic(@Body() body: AttRequestNoMic): string {
+    async mic(@Body() body: AttRequestNoMic): Promise<string> {
         return this.verifierService.mic(body);
     }
 
@@ -47,8 +50,9 @@ export class VerifierController {
      * If successful, it returns the encoding of the attestation request with the correct message integrity code, which can be directly submitted to the State Connector contract.
      * @param body
      */
+    @HttpCode(200)
     @Post('prepareRequest')
-    prepareRequest(@Body() body: AttRequestNoMic): EncodedRequestBody {
+    async prepareRequest(@Body() body: AttRequestNoMic): Promise<EncodedRequestBody> {
         return this.verifierService.prepareRequest(body);
     }
 }

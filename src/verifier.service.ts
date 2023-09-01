@@ -6,7 +6,7 @@ import { ZERO_MIC } from './utils';
 
 @Injectable()
 export class VerifierService {
-    verifyEncodedRequest(request: EncodedRequestBody): AttResponse {
+    public async verifyEncodedRequest(request: EncodedRequestBody): Promise<AttResponse> {
         console.log(request);
         // TODO: insert
         // Your code goes here!!!
@@ -22,7 +22,7 @@ export class VerifierService {
         return res;
     }
 
-    prepareResponse(request: AttRequestNoMic): AttResponse {
+    public async prepareResponse(request: AttRequestNoMic): Promise<AttResponse> {
         // TODO: insert
         // Your code goes here!!!
         console.log(request);
@@ -36,14 +36,14 @@ export class VerifierService {
         return res;
     }
 
-    mic(request: AttRequestNoMic): string {
+    public async mic(request: AttRequestNoMic): Promise<string> {
         // TODO: insert
         // Your code goes here!!!
         console.log(request);
         return ZERO_MIC;
     }
 
-    prepareRequest(request: AttRequestNoMic): EncodedRequestBody {
+    public async prepareRequest(request: AttRequestNoMic): Promise<EncodedRequestBody> {
         // TODO: insert
         // Your code goes here!!!
         console.log(request);
