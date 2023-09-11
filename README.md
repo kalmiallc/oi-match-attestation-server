@@ -18,6 +18,10 @@ $ yarn
 ## Running the app
 
 ```bash
+# Use the default env 
+cp .env.example .env
+# Or configure your by editing the .env file
+
 # development
 $ yarn start
 

@@ -2,13 +2,17 @@
 // DO NOT EDIT //
 /////////////////
 
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { ApiSecurity } from '@nestjs/swagger';
+import { ApiKeyAuthGuard } from './auth/apikey.guard';
 import { EncodedRequestBody } from './dto/encoded-request.dto';
 import { AttRequestNoMic } from './dto/request-no-mic';
-import { VerifierService } from './verifier.service';
 import { AttResponse } from './dto/response.dto';
+import { VerifierService } from './verifier.service';
 
 @Controller('verifier/eth')
+@UseGuards(ApiKeyAuthGuard)
+@ApiSecurity('X-API-KEY')
 export class VerifierController {
     constructor(private readonly verifierService: VerifierService) {}
 
