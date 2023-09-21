@@ -112,8 +112,6 @@ export namespace TypeTemplate {
   ///////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////// DTOs /////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
   export class AdditionalSubstruct1 {
     constructor(params: Required<AdditionalSubstruct1>) {
       Object.assign(this, params);
@@ -126,7 +124,6 @@ export namespace TypeTemplate {
     @ApiProperty({ description: `description*` })
     templateStructField!: string;
   }
-
   export class AdditionalSubstruct2 {
     constructor(params: Required<AdditionalSubstruct2>) {
       Object.assign(this, params);
@@ -138,19 +135,6 @@ export namespace TypeTemplate {
     @IsHexadecimal()
     @ApiProperty({ description: `description*` })
     templateStructField!: string;
-  }
-
-  export class RequestBody {
-    constructor(params: Required<RequestBody>) {
-      Object.assign(this, params);
-    }
-
-    /**
-     * description*
-     */
-    @IsHexadecimal()
-    @ApiProperty({ description: `description*` })
-    templateRequestField!: string;
   }
   export class ResponseBody {
     constructor(params: Required<ResponseBody>) {
@@ -164,7 +148,52 @@ export namespace TypeTemplate {
     @ApiProperty({ description: `description*` })
     templateResponseField!: string;
   }
+  export class RequestBody {
+    constructor(params: Required<RequestBody>) {
+      Object.assign(this, params);
+    }
 
+    /**
+     * description*
+     */
+    @IsHexadecimal()
+    @ApiProperty({ description: `description*` })
+    templateRequestField!: string;
+  }
+  export class Request {
+    constructor(params: Required<Request>) {
+      Object.assign(this, params);
+    }
+
+    /**
+     * Id of the attestation type.
+     */
+    @IsHexadecimal()
+    @ApiProperty({ description: `Id of the attestation type.` })
+    attestationType!: string;
+
+    /**
+     * Data source id as defined [here](enums.md).
+     */
+    @IsHexadecimal()
+    @ApiProperty({ description: `Data source id as defined [here](enums.md).` })
+    sourceId!: string;
+
+    /**
+     * `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).
+     */
+    @IsHexadecimal()
+    @ApiProperty({
+      description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).`,
+    })
+    messageIntegrityCode!: string;
+
+    /**
+     * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
+     */
+    @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
+    requestBody!: RequestBody;
+  }
   export class Response {
     constructor(params: Required<Response>) {
       Object.assign(this, params);
@@ -232,39 +261,5 @@ export namespace TypeTemplate {
     data!: Response;
   }
 
-  export class Request {
-    constructor(params: Required<Request>) {
-      Object.assign(this, params);
-    }
-
-    /**
-     * Id of the attestation type.
-     */
-    @IsHexadecimal()
-    @ApiProperty({ description: `Id of the attestation type.` })
-    attestationType!: string;
-
-    /**
-     * Data source id as defined [here](enums.md).
-     */
-    @IsHexadecimal()
-    @ApiProperty({ description: `Data source id as defined [here](enums.md).` })
-    sourceId!: string;
-
-    /**
-     * `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).
-     */
-    @IsHexadecimal()
-    @ApiProperty({
-      description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).`,
-    })
-    messageIntegrityCode!: string;
-
-    /**
-     * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
-     */
-    @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
-    requestBody!: RequestBody;
-  }  
-  export class RequestNoMic extends OmitType(Request, ["messageIntegrityCode"] as const) {}
+  export class RequestNoMic extends OmitType(Request, ["messageIntegrityCode"] as never[]) {}
 }
