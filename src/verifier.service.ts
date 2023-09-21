@@ -1,49 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { EncodedRequestBody } from './dto/encoded-request.dto';
-import { AttRequestNoMic } from './dto/request-no-mic';
-import { AttResponse } from './dto/response.dto';
 import { ZERO_MIC } from './utils';
+import { TypeTemplate } from './dto/TypeTemplate.dto';
 
 @Injectable()
 export class VerifierService {
-    public async verifyEncodedRequest(request: EncodedRequestBody): Promise<AttResponse> {
+    public async verifyEncodedRequest(request: EncodedRequestBody): Promise<TypeTemplate.Response> {
         console.log(request);
         // TODO: insert
         // Your code goes here!!!
         // ABI decode the type
-        const res: AttResponse = {
+        const res: TypeTemplate.Response = {
             attestationType: '0',
-            sourceId: 0,
-            votingRound: 0,
-            messageIntegrityCode: ZERO_MIC,
+            sourceId: "0",
+            votingRound: "0",
+            lowestUsedTimestamp: "0",
             requestBody: { templateRequestField: 'decoded request body template' },
             responseBody: { templateResponseField: 'decode response body template' },
         };
         return res;
     }
 
-    public async prepareResponse(request: AttRequestNoMic): Promise<AttResponse> {
+    public async prepareResponse(request: TypeTemplate.RequestNoMic): Promise<TypeTemplate.Response> {
         // TODO: insert
         // Your code goes here!!!
         console.log(request);
-        const res: AttResponse = {
+        const res: TypeTemplate.Response = {
             ...request,
-            messageIntegrityCode: ZERO_MIC,
-            votingRound: 0,
+            votingRound: "0",
+            lowestUsedTimestamp: "0",
             responseBody: { templateResponseField: 'Prepare response template' },
         };
 
         return res;
     }
 
-    public async mic(request: AttRequestNoMic): Promise<string> {
+    public async mic(request: TypeTemplate.RequestNoMic): Promise<string> {
         // TODO: insert
         // Your code goes here!!!
         console.log(request);
         return ZERO_MIC;
     }
 
-    public async prepareRequest(request: AttRequestNoMic): Promise<EncodedRequestBody> {
+    public async prepareRequest(request: TypeTemplate.RequestNoMic): Promise<EncodedRequestBody> {
         // TODO: insert
         // Your code goes here!!!
         console.log(request);

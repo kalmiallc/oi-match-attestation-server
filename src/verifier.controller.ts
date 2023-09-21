@@ -5,10 +5,9 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { ApiKeyAuthGuard } from './auth/apikey.guard';
-import { EncodedRequestBody } from './dto/encoded-request.dto';
-import { AttRequestNoMic } from './dto/request-no-mic';
-import { AttResponse } from './dto/response.dto';
 import { VerifierService } from './verifier.service';
+import { TypeTemplate } from './dto/TypeTemplate.dto';
+import { EncodedRequestBody } from './dto/encoded-request.dto';
 
 @Controller('verifier/eth')
 @UseGuards(ApiKeyAuthGuard)
@@ -24,7 +23,7 @@ export class VerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequestBody): Promise<AttResponse> {
+    async verify(@Body() body: EncodedRequestBody): Promise<TypeTemplate.Response> {
         return this.verifierService.verifyEncodedRequest(body);
     }
 
@@ -35,7 +34,7 @@ export class VerifierController {
      */
     @HttpCode(200)
     @Post('prepareResponse')
-    async prepareResponse(@Body() body: AttRequestNoMic): Promise<AttResponse> {
+    async prepareResponse(@Body() body: TypeTemplate.RequestNoMic): Promise<TypeTemplate.Response> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -45,7 +44,7 @@ export class VerifierController {
      */
     @HttpCode(200)
     @Post('mic')
-    async mic(@Body() body: AttRequestNoMic): Promise<string> {
+    async mic(@Body() body: TypeTemplate.RequestNoMic): Promise<string> {
         return this.verifierService.mic(body);
     }
 
@@ -56,7 +55,7 @@ export class VerifierController {
      */
     @HttpCode(200)
     @Post('prepareRequest')
-    async prepareRequest(@Body() body: AttRequestNoMic): Promise<EncodedRequestBody> {
+    async prepareRequest(@Body() body: TypeTemplate.RequestNoMic): Promise<EncodedRequestBody> {
         return this.verifierService.prepareRequest(body);
     }
 }
