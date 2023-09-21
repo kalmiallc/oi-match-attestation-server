@@ -1,8 +1,7 @@
-import { readFileSync, readdirSync } from "fs";
-import { TypeRecord } from "./types";
-// import path from "path";
 import { ethers } from "ethers";
+import { readFileSync, readdirSync } from "fs";
 import * as path from 'path';
+import { TypeRecord } from "./types";
 
 export interface ABIFragment {
    components?: ABIFragment[];
@@ -12,6 +11,8 @@ export interface ABIFragment {
 }
 
 export const DEFAULT_ATTESTATION_TYPE_CONFIGS_PATH = "generated/configs/abi";
+export const MIC_SALT = "Flare";
+
 /**
  * Compares values of Solidity elementary types when represented in JSON.
  * Checks the consistency of the types and the values.
@@ -223,9 +224,7 @@ export function structsDeepEqual(struct1: any, struct2: any, abi: ABIFragment): 
 export function readAttestationTypeConfigs(configsPath = DEFAULT_ATTESTATION_TYPE_CONFIGS_PATH): Map<string, TypeRecord> {
    const typeRecMap = new Map<string, TypeRecord>();
    let files = readdirSync(configsPath);
-   console.log(configsPath, files)
    files.forEach((fileName) => {
-      console.log(path)
       let name = path.basename(fileName, ".json");
       typeRecMap.set(
          name,

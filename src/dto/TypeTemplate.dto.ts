@@ -261,5 +261,5 @@ export namespace TypeTemplate {
     data!: Response;
   }
 
-  export class RequestNoMic extends OmitType(Request, ["messageIntegrityCode"] as never[]) {}
+  export class RequestNoMic extends OmitType(Request, ["messageIntegrityCode"] as const) {}
 }

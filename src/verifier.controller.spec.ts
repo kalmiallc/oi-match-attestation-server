@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TypeTemplate } from './dto/TypeTemplate.dto';
-import { VerifierController } from './verifier.controller';
-import { VerifierService } from './verifier.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { TypeTemplate } from "./dto/TypeTemplate.dto";
+import { VerifierController } from "./verifier.controller";
+import { TEST_ENCODED_REQUEST, TEST_ENCODED_REQUEST_NO_MIC, TEST_MIC, TEST_REQUEST_NO_MIC, TEST_RESPONSE, VerifierService } from "./verifier.service";
 
-describe('AppController', () => {
+describe("AppController", () => {
     let appController: VerifierController;
 
     beforeEach(async () => {
@@ -15,34 +15,28 @@ describe('AppController', () => {
         appController = app.get<VerifierController>(VerifierController);
     });
 
-    describe('root', () => {
-        it('should test your base path ( verifier/{chain}/ )', async () => {
-            const expectedRes: TypeTemplate.Response = {
-                attestationType: '0',
-                sourceId: "0",
-                votingRound: "0",
-                lowestUsedTimestamp: "0",
-                requestBody: { templateRequestField: 'decoded request body template' },
-                responseBody: { templateResponseField: 'decode response body template' },
-            };
+    describe("root", () => {
+        it("should 'verify' pass", async () => {
             const actualRes = await appController.verify({
-                abiEncodedRequest: "0x5479706554656d706c617465000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111b4ec0c374d35cd66eef1522d55d0d870a398636a4c088a062dabf8041f69a02e",
+                abiEncodedRequest: TEST_ENCODED_REQUEST_NO_MIC
             });
-            expect(actualRes).toStrictEqual(expectedRes);
+            expect(actualRes).toStrictEqual(TEST_RESPONSE);
         });
-        it('should test your base path ( verifier/{chain}/ )', async () => {
-            const expectedRes: TypeTemplate.Response = {
-                attestationType: '0',
-                sourceId: "0",
-                votingRound: "0",
-                lowestUsedTimestamp: "0",
-                requestBody: { templateRequestField: 'decoded request body template' },
-                responseBody: { templateResponseField: 'decode response body template' },
-            };
-            const actualRes = await appController.verify({
-                abiEncodedRequest: "",
+        it("should prepare response", async () => {
+            const actualRes = await appController.prepareResponse(TEST_REQUEST_NO_MIC);
+            expect(actualRes).toStrictEqual(TEST_RESPONSE);
+        });
+        it("should obtain 'mic'", async () => {
+            const actualMic = await appController.mic({
+                ...TEST_REQUEST_NO_MIC,
             });
-            expect(actualRes).toStrictEqual(expectedRes);
+            expect(actualMic).toStrictEqual(TEST_MIC);
+        });
+        it("should prepare request", async () => {
+            // const expectedRes: TypeTemplate.Response = TEST_RESPONSE;
+            const actualRequest= await appController.prepareRequest(TEST_REQUEST_NO_MIC);
+            console.log(actualRequest)
+            expect(actualRequest.abiEncodedRequest).toStrictEqual(TEST_ENCODED_REQUEST);
         });
 
     });
