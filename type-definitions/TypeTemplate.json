@@ -1,6 +1,6 @@
 {
   "name": "TypeTemplate",
-  "id": "0x00",
+  "fullComment": " @custom:name TypeTemplate\n @custom:id 0x00\n @custom:supported <supported sources>\n @author <author of the type>\n @notice <description of the type>\n @custom:verification <general verification rules>\n @custom:lut <lowestUsedTimestamp>",
   "description": "<description of the type>",
   "supported": "<supported sources>",
   "verification": "<general verification rules>",
@@ -10,6 +10,7 @@
     "description": "Toplevel proof",
     "above": "",
     "below": "",
+    "fullComment": " @notice Toplevel proof\n @param merkleProof Merkle proof corresponding to the attestation response.\n @param data Attestation response.",
     "params": [
       {
         "name": "merkleProof",
@@ -30,6 +31,7 @@
     "description": "Toplevel request",
     "above": "",
     "below": "",
+    "fullComment": " @notice Toplevel request\n @param attestationType Id of the attestation type.\n @param sourceId Data source id as defined [here](enums.md).\n @param messageIntegrityCode `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).\n @param requestBody Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.",
     "params": [
       {
         "name": "attestationType",
@@ -62,6 +64,7 @@
     "description": "Toplevel response",
     "above": "",
     "below": "",
+    "fullComment": " @notice Toplevel response\n @param attestationType Extracted from the request.\n @param sourceId Extracted from the request.\n @param votingRound The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.\n @param lowestUsedTimestamp The lowest timestamp used to generate the response.\n @param requestBody Extracted from the request.\n @param responseBody Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.",
     "params": [
       {
         "name": "attestationType",
@@ -103,54 +106,121 @@
   },
   "requestBody": {
     "name": "RequestBody",
-    "description": "Request body for ------- attestation type",
-    "above": "<additional explenation above>",
-    "below": "<additional explenation belove>",
+    "description": "Request body for TypeTemplate attestation type",
+    "above": "Additional explanation for 'above' slot in generated Markdown docs",
+    "below": "Additional explanation for 'below' slot in generated Markdown docs",
+    "fullComment": " @notice Request body for TypeTemplate attestation type\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param bytes32Field example bytes32 field\n @param boolField example bool field\n @param requestSubstruct1 example RequestSubstruct1 field\n @param requestSubstruct2Array example RequestSubstruct2 array field*",
     "params": [
       {
-        "name": "templateRequestField",
+        "name": "bytes32Field",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "description*"
+        "comment": "example bytes32 field"
+      },
+      {
+        "name": "boolField",
+        "type": "bool",
+        "typeSimple": "bool",
+        "comment": "example bool field"
+      },
+      {
+        "name": "requestSubstruct1",
+        "type": "struct TypeTemplate.RequestSubstruct1",
+        "typeSimple": "RequestSubstruct1",
+        "comment": "example RequestSubstruct1 field"
+      },
+      {
+        "name": "requestSubstruct2Array",
+        "type": "struct TypeTemplate.RequestSubstruct2[]",
+        "typeSimple": "RequestSubstruct2[]",
+        "comment": "example RequestSubstruct2 array field*"
       }
     ]
   },
   "responseBody": {
     "name": "ResponseBody",
-    "description": "Response body for ------- attestation type.",
-    "above": "<additional explenation above>",
-    "below": "<additional explenation belove>",
+    "description": "Response body for TypeTemplate attestation type.",
+    "above": "Additional explanation for 'above' slot in generated Markdown docs",
+    "below": "Additional explanation for 'below' slot in generated Markdown docs",
+    "fullComment": " @notice Response body for TypeTemplate attestation type.\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateResponseField example bytes32 field\n @param responseSubstruct1Array example ResponseSubstruct1 array field*",
     "params": [
       {
         "name": "templateResponseField",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "description*"
+        "comment": "example bytes32 field"
+      },
+      {
+        "name": "responseSubstruct1Array",
+        "type": "struct TypeTemplate.ResponseSubstruct1[]",
+        "typeSimple": "ResponseSubstruct1[]",
+        "comment": "example ResponseSubstruct1 array field*"
       }
     ]
   },
   "requestStructs": [
     {
-      "name": "AdditionalSubstruct1",
+      "name": "RequestSubstruct1",
       "description": "Additional struct first used in Request body fields",
-      "above": "<additional explenation above>",
-      "below": "<additional explenation belove>",
+      "above": "Additional explanation for 'above' slot in generated Markdown docs",
+      "below": "Additional explanation for 'below' slot in generated Markdown docs",
+      "fullComment": " @notice Additional struct first used in Request body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField example bytes32 field\n @param uintArrayField example uint256 array field\n @param boolArrayField example bool array field*",
       "params": [
         {
           "name": "templateStructField",
           "type": "bytes32",
           "typeSimple": "bytes32",
-          "comment": "description*"
+          "comment": "example bytes32 field"
+        },
+        {
+          "name": "uintArrayField",
+          "type": "uint256[]",
+          "typeSimple": "uint256[]",
+          "comment": "example uint256 array field"
+        },
+        {
+          "name": "boolArrayField",
+          "type": "bool[]",
+          "typeSimple": "bool[]",
+          "comment": "example bool array field*"
+        }
+      ]
+    },
+    {
+      "name": "RequestSubstruct2",
+      "description": "Additional struct first used in Request body fields",
+      "above": "Additional explanation for 'above' slot in generated Markdown docs",
+      "below": "Additional explanation for 'below' slot in generated Markdown docs",
+      "fullComment": " @notice Additional struct first used in Request body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField example bytes32 field\n @param intArrayField example int256 array field\n @param boolArrayField example bool array field*",
+      "params": [
+        {
+          "name": "templateStructField",
+          "type": "bytes32",
+          "typeSimple": "bytes32",
+          "comment": "example bytes32 field"
+        },
+        {
+          "name": "intArrayField",
+          "type": "int256[]",
+          "typeSimple": "int256[]",
+          "comment": "example int256 array field"
+        },
+        {
+          "name": "boolArrayField",
+          "type": "bool[]",
+          "typeSimple": "bool[]",
+          "comment": "example bool array field*"
         }
       ]
     }
   ],
   "responseStructs": [
     {
-      "name": "AdditionalSubstruct2",
+      "name": "ResponseSubstruct1",
       "description": "Additional struct first used in Response body fields",
-      "above": "<additional explenation above>",
-      "below": "<additional explenation belove>",
+      "above": "Additional explanation for 'above' slot in generated Markdown docs",
+      "below": "Additional explanation for 'below' slot in generated Markdown docs",
+      "fullComment": " @notice Additional struct first used in Response body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField description*",
       "params": [
         {
           "name": "templateStructField",
@@ -182,8 +252,57 @@
         "components": [
           {
             "internalType": "bytes32",
-            "name": "templateRequestField",
+            "name": "bytes32Field",
             "type": "bytes32"
+          },
+          {
+            "internalType": "bool",
+            "name": "boolField",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "templateStructField",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "uintArrayField",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "bool[]",
+                "name": "boolArrayField",
+                "type": "bool[]"
+              }
+            ],
+            "internalType": "struct TypeTemplate.RequestSubstruct1",
+            "name": "requestSubstruct1",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "templateStructField",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "int256[]",
+                "name": "intArrayField",
+                "type": "int256[]"
+              },
+              {
+                "internalType": "bool[]",
+                "name": "boolArrayField",
+                "type": "bool[]"
+              }
+            ],
+            "internalType": "struct TypeTemplate.RequestSubstruct2[]",
+            "name": "requestSubstruct2Array",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct TypeTemplate.RequestBody",
@@ -221,8 +340,57 @@
         "components": [
           {
             "internalType": "bytes32",
-            "name": "templateRequestField",
+            "name": "bytes32Field",
             "type": "bytes32"
+          },
+          {
+            "internalType": "bool",
+            "name": "boolField",
+            "type": "bool"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "templateStructField",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256[]",
+                "name": "uintArrayField",
+                "type": "uint256[]"
+              },
+              {
+                "internalType": "bool[]",
+                "name": "boolArrayField",
+                "type": "bool[]"
+              }
+            ],
+            "internalType": "struct TypeTemplate.RequestSubstruct1",
+            "name": "requestSubstruct1",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "templateStructField",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "int256[]",
+                "name": "intArrayField",
+                "type": "int256[]"
+              },
+              {
+                "internalType": "bool[]",
+                "name": "boolArrayField",
+                "type": "bool[]"
+              }
+            ],
+            "internalType": "struct TypeTemplate.RequestSubstruct2[]",
+            "name": "requestSubstruct2Array",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct TypeTemplate.RequestBody",
@@ -235,6 +403,18 @@
             "internalType": "bytes32",
             "name": "templateResponseField",
             "type": "bytes32"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "templateStructField",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct TypeTemplate.ResponseSubstruct1[]",
+            "name": "responseSubstruct1Array",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct TypeTemplate.ResponseBody",
@@ -279,8 +459,57 @@
             "components": [
               {
                 "internalType": "bytes32",
-                "name": "templateRequestField",
+                "name": "bytes32Field",
                 "type": "bytes32"
+              },
+              {
+                "internalType": "bool",
+                "name": "boolField",
+                "type": "bool"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes32",
+                    "name": "templateStructField",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "uint256[]",
+                    "name": "uintArrayField",
+                    "type": "uint256[]"
+                  },
+                  {
+                    "internalType": "bool[]",
+                    "name": "boolArrayField",
+                    "type": "bool[]"
+                  }
+                ],
+                "internalType": "struct TypeTemplate.RequestSubstruct1",
+                "name": "requestSubstruct1",
+                "type": "tuple"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes32",
+                    "name": "templateStructField",
+                    "type": "bytes32"
+                  },
+                  {
+                    "internalType": "int256[]",
+                    "name": "intArrayField",
+                    "type": "int256[]"
+                  },
+                  {
+                    "internalType": "bool[]",
+                    "name": "boolArrayField",
+                    "type": "bool[]"
+                  }
+                ],
+                "internalType": "struct TypeTemplate.RequestSubstruct2[]",
+                "name": "requestSubstruct2Array",
+                "type": "tuple[]"
               }
             ],
             "internalType": "struct TypeTemplate.RequestBody",
@@ -293,6 +522,18 @@
                 "internalType": "bytes32",
                 "name": "templateResponseField",
                 "type": "bytes32"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes32",
+                    "name": "templateStructField",
+                    "type": "bytes32"
+                  }
+                ],
+                "internalType": "struct TypeTemplate.ResponseSubstruct1[]",
+                "name": "responseSubstruct1Array",
+                "type": "tuple[]"
               }
             ],
             "internalType": "struct TypeTemplate.ResponseBody",

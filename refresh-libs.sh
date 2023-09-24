@@ -8,6 +8,11 @@ mkdir -p type-definitions
 rm -rf type-definitions/TypeTemplate.json
 cp ../state-connector-protocol/generated/configs/abi/TypeTemplate.json type-definitions/
 
+# Examples
+mkdir -p src/example-data
+rm -rf src/example-data/TypeTemplate.json
+cp ../state-connector-protocol/generated/examples/json/TypeTemplate.json src/example-data/
+
 # External libs for type definitions
 rm -rf src/external-libs
 mkdir -p src/external-libs

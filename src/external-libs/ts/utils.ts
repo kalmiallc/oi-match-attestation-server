@@ -1,8 +1,11 @@
 import { ethers } from "ethers";
 import { readFileSync, readdirSync } from "fs";
 import * as path from 'path';
-import { TypeRecord } from "./types";
+import { TypeRecord } from "./config-types";
 
+/**
+ * ABIFragment is a subset of ethers ABIFragment. It is used to define the ABI fragments
+ */
 export interface ABIFragment {
    components?: ABIFragment[];
    internalType: string;

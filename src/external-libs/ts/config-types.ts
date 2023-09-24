@@ -26,9 +26,9 @@ export interface TypeRecord extends ABIDefinitions {
    */
   name: string;
   /**
-   * Id of the attestation type. Must be 32 bytes long and unique. Community defined.
+   * Full comment for the attestation type as provided in the Solidity definition.
    */
-  id: string;
+  fullComment: string;
   /**
    * Description of the attestation type. Used also in the generated documentation.
    */
@@ -107,6 +107,10 @@ export interface StructRecord {
    * Struct name.
    */
   name: string;
+  /**
+   * Full comment for the struct as provided in the Solidity definition.
+   */
+  fullComment: string;
   /**
    * Struct description. Possibly multiline, can use Markdown.
    */

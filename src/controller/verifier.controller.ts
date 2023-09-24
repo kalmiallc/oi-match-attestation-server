@@ -1,15 +1,12 @@
-/////////////////
-// DO NOT EDIT //
-/////////////////
-
 import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { ApiKeyAuthGuard } from './auth/apikey.guard';
-import { VerifierService } from './verifier.service';
-import { TypeTemplate } from './dto/TypeTemplate.dto';
-import { EncodedRequestBody } from './dto/encoded-request.dto';
+import { ApiKeyAuthGuard } from '../auth/apikey.guard';
+import { VerifierService } from '../service/verifier.service';
+import { TypeTemplate } from '../dto/TypeTemplate.dto';
+import { EncodedRequestBody } from '../dto/encoded-request.dto';
+import { AttestationResponseDTO } from '../dto/verification-response.dto';
 
-@Controller('verifier/eth')
+@Controller('TypeTemplate')
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity('X-API-KEY')
 export class VerifierController {
@@ -23,7 +20,7 @@ export class VerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequestBody): Promise<TypeTemplate.Response> {
+    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate.Response>> {
         return this.verifierService.verifyEncodedRequest(body);
     }
 
@@ -34,7 +31,7 @@ export class VerifierController {
      */
     @HttpCode(200)
     @Post('prepareResponse')
-    async prepareResponse(@Body() body: TypeTemplate.RequestNoMic): Promise<TypeTemplate.Response> {
+    async prepareResponse(@Body() body: TypeTemplate.RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate.Response>> {
         return this.verifierService.prepareResponse(body);
     }
 

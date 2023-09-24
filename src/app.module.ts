@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { VerifierController } from './verifier.controller';
-import { VerifierService } from './verifier.service';
+import { VerifierController } from './controller/verifier.controller';
+import { VerifierService } from './service/verifier.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { AuthService } from './auth/auth.service';

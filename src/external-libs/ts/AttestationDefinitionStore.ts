@@ -1,4 +1,4 @@
-import { TypeRecord } from "./types";
+import { TypeRecord } from "./config-types";
 import { ethers } from "ethers";
 import { ARBase } from "./interfaces";
 import { readAttestationTypeConfigs, decodeAttestationType, ABIFragment, remapABIParsedToObjects, structsDeepEqual, DEFAULT_ATTESTATION_TYPE_CONFIGS_PATH } from "./utils";
@@ -112,7 +112,7 @@ export class AttestationDefinitionStore {
          throw new Error(`Unsupported attestation type id: '${request.attestationType}'`);
       }
       // custom encoding for the prefix
-      const abiEncodePrefix = this.coder.encode(["bytes32", "bytes32", "bytes32"], [request.attestationType, request.sourceId, request.messageIntegrityCode || "0x0"]);
+      const abiEncodePrefix = this.coder.encode(["bytes32", "bytes32", "bytes32"], [request.attestationType, request.sourceId, request.messageIntegrityCode || "0x0000000000000000000000000000000000000000000000000000000000000000"]);
       // ABI encoding for the request body
       const requestBodyAbi = definition.requestAbi.components.find((item: ABIFragment) => item.name == "requestBody");
       if (!requestBodyAbi) {
