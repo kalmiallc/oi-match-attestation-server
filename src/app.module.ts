@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-import { VerifierController } from "./controller/verifier.controller";
-import { VerifierService } from "./service/verifier.service";
 import { ConfigModule } from "@nestjs/config";
-import configuration from "./config/configuration";
-import { AuthService } from "./auth/auth.service";
-import { AuthModule } from "./auth/auth.module";
 import { ApiKeyStrategy } from "./auth/apikey.strategy";
+import { AuthModule } from "./auth/auth.module";
+import { AuthService } from "./auth/auth.service";
+import configuration from "./config/configuration";
+import { TypeTemplateVerifierController } from "./controller/type-template-verifier.controller";
+import { TypeTemplateVerifierService } from "./service/type-template-verifier.service";
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import { ApiKeyStrategy } from "./auth/apikey.strategy";
         }),
         AuthModule,
     ],
-    controllers: [VerifierController],
-    providers: [VerifierService, ApiKeyStrategy, AuthService],
+    controllers: [TypeTemplateVerifierController],
+    providers: [TypeTemplateVerifierService, ApiKeyStrategy, AuthService],
 })
 export class AppModule {}

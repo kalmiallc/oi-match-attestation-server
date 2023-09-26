@@ -1,21 +1,21 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { VerifierService } from "../service/verifier.service";
-import { VerifierController } from "./verifier.controller";
+import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
+import { TypeTemplateVerifierController } from "./type-template-verifier.controller";
 import { readFileSync } from "fs";
 import { ExampleData } from "../utils";
 import { TypeTemplate } from "../dto/TypeTemplate.dto";
 
 describe("AppController", () => {
-    let appController: VerifierController;
+    let appController: TypeTemplateVerifierController;
     let exampleData: ExampleData<TypeTemplate.RequestNoMic, TypeTemplate.Request, TypeTemplate.Response>;
 
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
-            controllers: [VerifierController],
-            providers: [VerifierService],
+            controllers: [TypeTemplateVerifierController],
+            providers: [TypeTemplateVerifierService],
         }).compile();
 
-        appController = app.get<VerifierController>(VerifierController);
+        appController = app.get<TypeTemplateVerifierController>(TypeTemplateVerifierController);
         exampleData = JSON.parse(readFileSync("src/example-data/TypeTemplate.json", "utf8"));
     });
 

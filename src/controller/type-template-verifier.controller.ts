@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";
-import { VerifierService } from "../service/verifier.service";
+import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
 import { TypeTemplate } from "../dto/TypeTemplate.dto";
 import { EncodedRequestBody } from "../dto/encoded-request.dto";
 import { AttestationResponseDTO } from "../dto/verification-response.dto";
@@ -9,8 +9,8 @@ import { AttestationResponseDTO } from "../dto/verification-response.dto";
 @Controller("TypeTemplate")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
-export class VerifierController {
-    constructor(private readonly verifierService: VerifierService) {}
+export class TypeTemplateVerifierController {
+    constructor(private readonly verifierService: TypeTemplateVerifierService) {}
 
     /**
      *

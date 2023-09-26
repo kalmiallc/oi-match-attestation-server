@@ -5,7 +5,6 @@ import { ApiProperty, OmitType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
     Validate,
-    IsOptional,
     IsBoolean,
     ValidationArguments,
     ValidatorConstraint,
@@ -41,7 +40,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage(_args: ValidationArguments) {
             return "($property) value ($value) is not a decimal number in string or 0x-prefixed hexadecimal string";
         }
     }
@@ -57,7 +56,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        validate(text: any, args: ValidationArguments) {
+        validate(text: any, _args: ValidationArguments) {
             return typeof text === "string" && (/^-?0x[0-9a-fA-F]+$/i.test(text) || /^-?[0-9]+$/i.test(text));
         }
 
@@ -66,7 +65,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage(_args: ValidationArguments) {
             return "($property) value ($value) is not a signed decimal integer in string or signed 0x-prefixed hexadecimal string";
         }
     }
@@ -82,7 +81,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        validate(text: any, args: ValidationArguments) {
+        validate(text: any, _args: ValidationArguments) {
             return typeof text === "string" && /^0x[0-9a-f]{64}$/i.test(text);
         }
 
@@ -91,7 +90,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage(_args: ValidationArguments) {
             return "($property) value ($value) is not 0x-prefixed hexadecimal string representing 32 bytes";
         }
     }
@@ -107,7 +106,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        validate(text: any, args: ValidationArguments) {
+        validate(text: any, _args: ValidationArguments) {
             return typeof text === "string" && /^0x[0-9a-f]+$/i.test(text);
         }
 
@@ -116,7 +115,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage(_args: ValidationArguments) {
             return "($property) value ($value) is not 0x-prefixed hexadecimal string";
         }
     }
@@ -132,7 +131,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        validate(text: any, args: ValidationArguments) {
+        validate(text: any, _args: ValidationArguments) {
             return typeof text === "string" && /^0x[0-9a-f]{40}$/i.test(text);
         }
 
@@ -141,7 +140,7 @@ export namespace TypeTemplate {
          * @param args
          * @returns
          */
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage(_args: ValidationArguments) {
             return "($property) value ($value) is not 0x-prefixed hexadecimal string representing 20 bytes (EVM address)";
         }
     }

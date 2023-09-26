@@ -8,7 +8,7 @@ import { MIC_SALT } from "../external-libs/ts/utils";
 import { AttestationResponse, AttestationStatus } from "../external-libs/ts/AttestationResponse";
 
 @Injectable()
-export class VerifierService {
+export class TypeTemplateVerifierService {
     store!: AttestationDefinitionStore;
     exampleData!: ExampleData<TypeTemplate.RequestNoMic, TypeTemplate.Request, TypeTemplate.Response>;
 
