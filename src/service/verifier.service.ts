@@ -9,7 +9,7 @@ import { AttestationResponse, AttestationStatus } from "../external-libs/ts/Atte
 
 @Injectable()
 export class VerifierService {
-    store!: AttestationDefinitionStore
+    store!: AttestationDefinitionStore;
     exampleData!: ExampleData<TypeTemplate.RequestNoMic, TypeTemplate.Request, TypeTemplate.Response>;
 
     constructor() {
@@ -18,7 +18,7 @@ export class VerifierService {
     }
 
     public async verifyEncodedRequest(request: EncodedRequestBody): Promise<AttestationResponse<TypeTemplate.Response>> {
-        let requestJSON = this.store.parseRequest(request.abiEncodedRequest);
+        const requestJSON = this.store.parseRequest(request.abiEncodedRequest);
         console.dir(requestJSON, { depth: null });
 
         // Put here logic to verify the request and produce response body
@@ -26,7 +26,7 @@ export class VerifierService {
         // Example of response body
         const res: AttestationResponse<TypeTemplate.Response> = {
             status: AttestationStatus.VALID,
-            response: this.exampleData.response
+            response: this.exampleData.response,
         };
 
         return res;
@@ -43,8 +43,8 @@ export class VerifierService {
             response: {
                 ...this.exampleData.response,
                 ...request,
-            } as TypeTemplate.Response
-        }
+            } as TypeTemplate.Response,
+        };
 
         return res;
     }
@@ -76,7 +76,7 @@ export class VerifierService {
 
         const newRequest = {
             ...request,
-            messageIntegrityCode: this.store.attestationResponseHash(response, MIC_SALT)!
+            messageIntegrityCode: this.store.attestationResponseHash(response, MIC_SALT)!,
         } as TypeTemplate.Request;
 
         const res: EncodedRequestBody = {

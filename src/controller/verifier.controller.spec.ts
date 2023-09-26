@@ -22,7 +22,7 @@ describe("AppController", () => {
     describe("root", () => {
         it("should 'verify' pass", async () => {
             const actualRes = await appController.verify({
-                abiEncodedRequest: exampleData.encodedRequestZeroMic
+                abiEncodedRequest: exampleData.encodedRequestZeroMic,
             });
             expect(actualRes.status).toEqual("VALID");
             expect(actualRes.response).toStrictEqual(exampleData.response);
@@ -39,9 +39,8 @@ describe("AppController", () => {
             expect(actualMic).toStrictEqual(exampleData.messageIntegrityCode);
         });
         it("should prepare request", async () => {
-            const actualRequest= await appController.prepareRequest(exampleData.requestNoMic);
+            const actualRequest = await appController.prepareRequest(exampleData.requestNoMic);
             expect(actualRequest.abiEncodedRequest).toStrictEqual(exampleData.encodedRequest);
         });
-
     });
 });

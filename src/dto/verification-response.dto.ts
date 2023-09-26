@@ -5,4 +5,4 @@ import { AttestationResponse } from "src/external-libs/ts/AttestationResponse";
  * If status is 'VALID' then parameters @param response contains attestation response.
  * Otherwise, @param response is undefined.
  */
-export class AttestationResponseDTO<RES> extends AttestationResponse<RES> {};
+export class AttestationResponseDTO<RES> extends AttestationResponse<RES> {}

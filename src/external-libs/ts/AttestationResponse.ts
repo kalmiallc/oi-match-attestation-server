@@ -2,18 +2,18 @@
  * Attestation status
  */
 export enum AttestationStatus {
-   /**
-    * Attestation request is valid.
-    */
-   VALID = "VALID",
-   /**
-    * Attestation request is invalid.
-    */
-   INVALID = "INVALID",
-   /**
-    * Attestation request cannot be confirmed neither rejected by the verifier at the moment.
-    */
-   INDETERMINATE = "INDETERMINATE"
+    /**
+     * Attestation request is valid.
+     */
+    VALID = "VALID",
+    /**
+     * Attestation request is invalid.
+     */
+    INVALID = "INVALID",
+    /**
+     * Attestation request cannot be confirmed neither rejected by the verifier at the moment.
+     */
+    INDETERMINATE = "INDETERMINATE",
 }
 /**
  * Object returned as a result of attestation.
@@ -22,12 +22,12 @@ export enum AttestationStatus {
  */
 
 export class AttestationResponse<RES> {
-   /**
-    * Verification status.
-    */
-   status!: AttestationStatus;
-   /**
-    * Attestation response.
-    */
-   response?: RES;
+    /**
+     * Verification status.
+     */
+    status!: AttestationStatus;
+    /**
+     * Attestation response.
+     */
+    response?: RES;
 }

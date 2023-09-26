@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { ConfigModule } from '@nestjs/config';
-import configuration from '../config/configuration';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthService } from "./auth.service";
+import { ConfigModule } from "@nestjs/config";
+import configuration from "../config/configuration";
 
-describe('AuthService', () => {
+describe("AuthService", () => {
     let service: AuthService;
 
     beforeEach(async () => {
@@ -19,11 +19,11 @@ describe('AuthService', () => {
         service = module.get<AuthService>(AuthService);
     });
 
-    it('should be defined', () => {
+    it("should be defined", () => {
         expect(service).toBeDefined();
     });
 
-    it('should be able to use config module', () => {
-        expect(service.validateApiKey('abc123')).toBe(true);
+    it("should be able to use config module", () => {
+        expect(service.validateApiKey("abc123")).toBe(true);
     });
 });

@@ -1,14 +1,14 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
-import { ApiKeyAuthGuard } from '../auth/apikey.guard';
-import { VerifierService } from '../service/verifier.service';
-import { TypeTemplate } from '../dto/TypeTemplate.dto';
-import { EncodedRequestBody } from '../dto/encoded-request.dto';
-import { AttestationResponseDTO } from '../dto/verification-response.dto';
+import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
+import { ApiSecurity } from "@nestjs/swagger";
+import { ApiKeyAuthGuard } from "../auth/apikey.guard";
+import { VerifierService } from "../service/verifier.service";
+import { TypeTemplate } from "../dto/TypeTemplate.dto";
+import { EncodedRequestBody } from "../dto/encoded-request.dto";
+import { AttestationResponseDTO } from "../dto/verification-response.dto";
 
-@Controller('TypeTemplate')
+@Controller("TypeTemplate")
 @UseGuards(ApiKeyAuthGuard)
-@ApiSecurity('X-API-KEY')
+@ApiSecurity("X-API-KEY")
 export class VerifierController {
     constructor(private readonly verifierService: VerifierService) {}
 
@@ -30,7 +30,7 @@ export class VerifierController {
      * @returns
      */
     @HttpCode(200)
-    @Post('prepareResponse')
+    @Post("prepareResponse")
     async prepareResponse(@Body() body: TypeTemplate.RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate.Response>> {
         return this.verifierService.prepareResponse(body);
     }
@@ -40,7 +40,7 @@ export class VerifierController {
      * @param body
      */
     @HttpCode(200)
-    @Post('mic')
+    @Post("mic")
     async mic(@Body() body: TypeTemplate.RequestNoMic): Promise<string> {
         return this.verifierService.mic(body);
     }
@@ -51,7 +51,7 @@ export class VerifierController {
      * @param body
      */
     @HttpCode(200)
-    @Post('prepareRequest')
+    @Post("prepareRequest")
     async prepareRequest(@Body() body: TypeTemplate.RequestNoMic): Promise<EncodedRequestBody> {
         return this.verifierService.prepareRequest(body);
     }

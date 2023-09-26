@@ -1,13 +1,9 @@
-
-
 /**
- * 
+ *
  */
 export interface ARBase {
-   attestationType: string;
-   sourceId: string;
-   messageIntegrityCode?: string;
-   requestBody: any;
+    attestationType: string;
+    sourceId: string;
+    messageIntegrityCode?: string;
+    requestBody: any;
 }
-
-

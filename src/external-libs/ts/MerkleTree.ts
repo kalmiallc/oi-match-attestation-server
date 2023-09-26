@@ -1,4 +1,3 @@
-
 /**
  * There are several variants for hashing sequences in Merkle trees in cases when there is odd number of hashes on some level.
  * - Bitcoin hashes remaining hash with itself
@@ -33,7 +32,7 @@ const coder = ethers.AbiCoder.defaultAbiCoder();
  * @returns hash of the input value
  */
 export function singleHash(val: string) {
-  return ethers.keccak256(val);
+    return ethers.keccak256(val);
 }
 
 /**
@@ -44,7 +43,7 @@ export function singleHash(val: string) {
  * @returns `0x`-prefixed 32-byte hex string (hash)
  */
 export function commitHash(merkleRoot: string, randomNumber: string, address: string): string {
-  return ethers.keccak256(coder.encode(["bytes32", "bytes32", "address"], [merkleRoot, randomNumber, address]))!;
+    return ethers.keccak256(coder.encode(["bytes32", "bytes32", "address"], [merkleRoot, randomNumber, address]))!;
 }
 
 /**
@@ -54,137 +53,137 @@ export function commitHash(merkleRoot: string, randomNumber: string, address: st
  * @returns the sorted hash
  */
 export function sortedHashPair(x: string, y: string) {
-  if (x <= y) {
-    return ethers.keccak256(coder.encode(["bytes32", "bytes32"], [x, y]));
-  }
-  return ethers.keccak256(coder.encode(["bytes32", "bytes32"], [y, x]));
+    if (x <= y) {
+        return ethers.keccak256(coder.encode(["bytes32", "bytes32"], [x, y]));
+    }
+    return ethers.keccak256(coder.encode(["bytes32", "bytes32"], [y, x]));
 }
 
 /**
  * Merkle tree implementation with all the helper function for constructing the tree and extracting the root and proofs for every leaf.
  */
 export class MerkleTree {
-  _tree: string[] = [];
-  initialHash = false;
+    _tree: string[] = [];
+    initialHash = false;
 
-  constructor(values: string[], initialHash = false) {
-    this.initialHash = initialHash;
-    this.build(values);
-  }
-
-  /**
-   * Merkle root
-   */
-  get root() {
-    return this._tree.length === 0 ? null : this._tree[0];
-  }
-
-  /**
-   * The array representing full tree (length is `2*hashCount - 1`)
-   */
-  get tree(): string[] {
-    return [...this._tree];
-  }
-
-  /**
-   * Number of leaves in the Merkle tree
-   */
-  get hashCount() {
-    return this._tree.length ? (this._tree.length + 1) / 2 : 0;
-  }
-
-  /**
-   * Returns leaves in array of the length `hashCount` sorted as `0x`-prefixed 32-byte hex strings.
-   */
-  get sortedHashes() {
-    const n = this.hashCount;
-    return this._tree.slice(this.hashCount - 1);
-  }
-
-  /**
-   * Parent index of the node at index `i` in array
-   * @param i index of a node in the Merkle tree
-   * @returns parent index
-   */
-  parent(i: number) {
-    return Math.floor((i - 1) / 2);
-  }
-
-  /**
-   * Given an array of leave hashes (`0x`-prefixed 32-byte hex strings) it builds the Merkle tree.
-   * @param values
-   */
-  build(values: string[]) {
-    const sorted = values.map((x) => x);
-    sorted.sort();
-
-    let hashes = [];
-    for (let i = 0; i < sorted.length; i++) {
-      if (i == 0 || sorted[i] !== sorted[i - 1]) {
-        hashes.push(sorted[i]);
-      }
+    constructor(values: string[], initialHash = false) {
+        this.initialHash = initialHash;
+        this.build(values);
     }
-    if (this.initialHash) {
-      hashes = hashes.map((x) => singleHash(x));
-    }
-    const n = hashes.length;
-    this._tree = [...new Array(Math.max(n - 1, 0)).fill(0), ...hashes];
-    for (let i = n - 2; i >= 0; i--) {
-      this._tree[i] = sortedHashPair(this._tree[2 * i + 1], this._tree[2 * i + 2])!;
-    }
-  }
 
-  /**
-   * Returns the hash of the `i`-th leaf (index determined by sorting and positioning in the build)
-   * @param i
-   * @returns
-   */
-  getHash(i: number) {
-    if (this.hashCount === 0 || i < 0 || i >= this.hashCount) {
-      return null;
+    /**
+     * Merkle root
+     */
+    get root() {
+        return this._tree.length === 0 ? null : this._tree[0];
     }
-    const pos = this._tree.length - this.hashCount + i;
-    return this._tree[pos];
-  }
 
-  /** Binary search
-   * Famously prone to subtle bugs, so over-documented with proof
-   */
-  binarySearch(hash: string): number | null {
-    let [low, high] = [0, this.hashCount];
-    let count = high;
-    if (count == 0) return null;
-    while (count > 1) {
-      // Invariants: low < high, 2 <= count == high - low == [low .. high].length
-      let mid = low + Math.floor(count/2); // low < mid < high _strictly_
-      hash < this.sortedHashes[mid] ? high = mid : low = mid; // low < high still
-      count = high - low; // preserves invariant
+    /**
+     * The array representing full tree (length is `2*hashCount - 1`)
+     */
+    get tree(): string[] {
+        return [...this._tree];
     }
-    let i = low; // Only element left: count == 1, since 0 != count <= 1
-    if (hash != this.sortedHashes[i]) return null;
-    return i;
-  }
 
-  /**
-   * Extracts the Merkle proof for the given hash, if it is in the tree
-   * @param hash the hash whose proof to return
-   * @returns the Merkle proof - a list of `0x`-prefixed 32-byte hex strings
-   */
-  getProof(hash: string | null): string[] | null {
-    if (hash == null) return null;
-    let i = this.binarySearch(hash);
-    if (i == null) return null;
-
-    const proof: string[] = [];
-    let pos = this._tree.length - this.hashCount + i;
-    while (pos > 0) {
-      proof.push(
-        this._tree[pos + 2 * (pos % 2) - 1] // if pos even, take left sibiling at pos - 1, else the right sibiling at pos + 1
-      );
-      pos = this.parent(pos);
+    /**
+     * Number of leaves in the Merkle tree
+     */
+    get hashCount() {
+        return this._tree.length ? (this._tree.length + 1) / 2 : 0;
     }
-    return proof;
-  }
+
+    /**
+     * Returns leaves in array of the length `hashCount` sorted as `0x`-prefixed 32-byte hex strings.
+     */
+    get sortedHashes() {
+        const n = this.hashCount;
+        return this._tree.slice(this.hashCount - 1);
+    }
+
+    /**
+     * Parent index of the node at index `i` in array
+     * @param i index of a node in the Merkle tree
+     * @returns parent index
+     */
+    parent(i: number) {
+        return Math.floor((i - 1) / 2);
+    }
+
+    /**
+     * Given an array of leave hashes (`0x`-prefixed 32-byte hex strings) it builds the Merkle tree.
+     * @param values
+     */
+    build(values: string[]) {
+        const sorted = values.map((x) => x);
+        sorted.sort();
+
+        let hashes = [];
+        for (let i = 0; i < sorted.length; i++) {
+            if (i == 0 || sorted[i] !== sorted[i - 1]) {
+                hashes.push(sorted[i]);
+            }
+        }
+        if (this.initialHash) {
+            hashes = hashes.map((x) => singleHash(x));
+        }
+        const n = hashes.length;
+        this._tree = [...new Array(Math.max(n - 1, 0)).fill(0), ...hashes];
+        for (let i = n - 2; i >= 0; i--) {
+            this._tree[i] = sortedHashPair(this._tree[2 * i + 1], this._tree[2 * i + 2])!;
+        }
+    }
+
+    /**
+     * Returns the hash of the `i`-th leaf (index determined by sorting and positioning in the build)
+     * @param i
+     * @returns
+     */
+    getHash(i: number) {
+        if (this.hashCount === 0 || i < 0 || i >= this.hashCount) {
+            return null;
+        }
+        const pos = this._tree.length - this.hashCount + i;
+        return this._tree[pos];
+    }
+
+    /** Binary search
+     * Famously prone to subtle bugs, so over-documented with proof
+     */
+    binarySearch(hash: string): number | null {
+        let [low, high] = [0, this.hashCount];
+        let count = high;
+        if (count == 0) return null;
+        while (count > 1) {
+            // Invariants: low < high, 2 <= count == high - low == [low .. high].length
+            const mid = low + Math.floor(count / 2); // low < mid < high _strictly_
+            hash < this.sortedHashes[mid] ? (high = mid) : (low = mid); // low < high still
+            count = high - low; // preserves invariant
+        }
+        const i = low; // Only element left: count == 1, since 0 != count <= 1
+        if (hash != this.sortedHashes[i]) return null;
+        return i;
+    }
+
+    /**
+     * Extracts the Merkle proof for the given hash, if it is in the tree
+     * @param hash the hash whose proof to return
+     * @returns the Merkle proof - a list of `0x`-prefixed 32-byte hex strings
+     */
+    getProof(hash: string | null): string[] | null {
+        if (hash == null) return null;
+        const i = this.binarySearch(hash);
+        if (i == null) return null;
+
+        const proof: string[] = [];
+        let pos = this._tree.length - this.hashCount + i;
+        while (pos > 0) {
+            proof.push(
+                this._tree[pos + 2 * (pos % 2) - 1], // if pos even, take left sibiling at pos - 1, else the right sibiling at pos + 1
+            );
+            pos = this.parent(pos);
+        }
+        return proof;
+    }
 }
 
 /**
@@ -195,10 +194,10 @@ export class MerkleTree {
  * @returns `true` if the proof is valid, `false` otherwise
  */
 export function verifyWithMerkleProof(leaf: string, proof: string[], root: string) {
-  if (!leaf || !proof || !root) return false;
-  let hash = leaf;
-  for (const pair of proof) {
-    hash = sortedHashPair(pair, hash)!;
-  }
-  return hash == root;
+    if (!leaf || !proof || !root) return false;
+    let hash = leaf;
+    for (const pair of proof) {
+        hash = sortedHashPair(pair, hash)!;
+    }
+    return hash == root;
 }
