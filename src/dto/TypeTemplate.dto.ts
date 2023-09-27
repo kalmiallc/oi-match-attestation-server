@@ -15,401 +15,398 @@ import {
     ValidateNested,
 } from "class-validator";
 
-export namespace TypeTemplate {
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////// CUSTOM VALIDATORS ////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// CUSTOM VALIDATORS ////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Validator constraint if the given value is a number or 0x-prefixed hexadecimal string.
+ */
+@ValidatorConstraint({ name: "unsigned-int", async: false })
+class IsUnsignedIntLike implements ValidatorConstraintInterface {
     /**
-     * Validator constraint if the given value is a number or 0x-prefixed hexadecimal string.
+     * Validates if the given value is a string of decimal unsigned number or 0x-prefixed hexadecimal string.
+     * @param text
+     * @param args
+     * @returns
      */
-    @ValidatorConstraint({ name: "unsigned-int", async: false })
-    export class IsUnsignedIntLike implements ValidatorConstraintInterface {
-        /**
-         * Validates if the given value is a string of decimal unsigned number or 0x-prefixed hexadecimal string.
-         * @param text
-         * @param args
-         * @returns
-         */
-        validate(text: any, _args: ValidationArguments) {
-            return typeof text === "string" && (/^0x[0-9a-fA-F]+$/i.test(text) || /^[0-9]+$/i.test(text));
-        }
-
-        /**
-         * Returns the default error message template.
-         * @param args
-         * @returns
-         */
-        defaultMessage(_args: ValidationArguments) {
-            return "($property) value ($value) is not a decimal number in string or 0x-prefixed hexadecimal string";
-        }
+    validate(text: any, _args: ValidationArguments) {
+        return typeof text === "string" && (/^0x[0-9a-fA-F]+$/i.test(text) || /^[0-9]+$/i.test(text));
     }
 
     /**
-     * Validator constraint if the given value is a number or 0x-prefixed hexadecimal string.
+     * Returns the default error message template.
+     * @param args
+     * @returns
      */
-    @ValidatorConstraint({ name: "signed-int", async: false })
-    export class IsSignedIntLike implements ValidatorConstraintInterface {
-        /**
-         * Validates if the given value is a number or 0x-prefixed hexadecimal string.
-         * @param text
-         * @param args
-         * @returns
-         */
-        validate(text: any, _args: ValidationArguments) {
-            return typeof text === "string" && (/^-?0x[0-9a-fA-F]+$/i.test(text) || /^-?[0-9]+$/i.test(text));
-        }
-
-        /**
-         * Returns the default error message template.
-         * @param args
-         * @returns
-         */
-        defaultMessage(_args: ValidationArguments) {
-            return "($property) value ($value) is not a signed decimal integer in string or signed 0x-prefixed hexadecimal string";
-        }
+    defaultMessage(_args: ValidationArguments) {
+        return "($property) value ($value) is not a decimal number in string or 0x-prefixed hexadecimal string";
     }
-
-    /**
-     * Validator constraint if the given value is a 0x-prefixed hexadecimal string representing 32 bytes.
-     */
-    @ValidatorConstraint({ name: "hash-32", async: false })
-    export class IsHash32 implements ValidatorConstraintInterface {
-        /**
-         * Validates if the given value is a 0x-prefixed hexadecimal string representing 32 bytes.
-         * @param text
-         * @param args
-         * @returns
-         */
-        validate(text: any, _args: ValidationArguments) {
-            return typeof text === "string" && /^0x[0-9a-f]{64}$/i.test(text);
-        }
-
-        /**
-         * Returns the default error message template.
-         * @param args
-         * @returns
-         */
-        defaultMessage(_args: ValidationArguments) {
-            return "($property) value ($value) is not 0x-prefixed hexadecimal string representing 32 bytes";
-        }
-    }
-
-    /**
-     * Validator constraint if the given value is a 0x-prefixed hexadecimal string
-     */
-    @ValidatorConstraint({ name: "hash-0x", async: false })
-    export class Is0xHex implements ValidatorConstraintInterface {
-        /**
-         * Validates if the given value is a 0x-prefixed hexadecimal string
-         * @param text
-         * @param args
-         * @returns
-         */
-        validate(text: any, _args: ValidationArguments) {
-            return typeof text === "string" && /^0x[0-9a-f]+$/i.test(text);
-        }
-
-        /**
-         * Returns the default error message template.
-         * @param args
-         * @returns
-         */
-        defaultMessage(_args: ValidationArguments) {
-            return "($property) value ($value) is not 0x-prefixed hexadecimal string";
-        }
-    }
-
-    /**
-     * Validator constraint if the given value is an EVM address, hence 0x-prefixed hexadecimal string representing 20 bytes.
-     */
-    @ValidatorConstraint({ name: "evm-address", async: false })
-    export class IsEVMAddress implements ValidatorConstraintInterface {
-        /**
-         * Validates if the given value is an EVM address, hence 0x-prefixed hexadecimal string representing 20 bytes.
-         * @param text
-         * @param args
-         * @returns
-         */
-        validate(text: any, _args: ValidationArguments) {
-            return typeof text === "string" && /^0x[0-9a-f]{40}$/i.test(text);
-        }
-
-        /**
-         * Returns the default error message template.
-         * @param args
-         * @returns
-         */
-        defaultMessage(_args: ValidationArguments) {
-            return "($property) value ($value) is not 0x-prefixed hexadecimal string representing 20 bytes (EVM address)";
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////// DTOs /////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    export class RequestSubstruct2 {
-        constructor(params: Required<RequestSubstruct2>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * example bytes32 field
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        templateStructField!: string;
-
-        /**
-         * example int256 array field
-         */
-        @Validate(IsUnsignedIntLike, { each: true })
-        @ApiProperty({ description: `example int256 array field`, example: ["123"] })
-        intArrayField!: string[];
-
-        /**
-         * example bool array field*
-         */
-        @IsBoolean({ each: true })
-        @ApiProperty({ description: `example bool array field*`, example: [true] })
-        boolArrayField!: boolean[];
-    }
-    export class RequestSubstruct1 {
-        constructor(params: Required<RequestSubstruct1>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * example bytes32 field
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        templateStructField!: string;
-
-        /**
-         * example uint256 array field
-         */
-        @Validate(IsUnsignedIntLike, { each: true })
-        @ApiProperty({ description: `example uint256 array field`, example: ["123456"] })
-        uintArrayField!: string[];
-
-        /**
-         * example bool array field*
-         */
-        @IsBoolean({ each: true })
-        @ApiProperty({ description: `example bool array field*`, example: [true] })
-        boolArrayField!: boolean[];
-    }
-    export class ResponseSubstruct1 {
-        constructor(params: Required<ResponseSubstruct1>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * description*
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `description*`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        templateStructField!: string;
-    }
-    export class ResponseBody {
-        constructor(params: Required<ResponseBody>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * example bytes32 field
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        templateResponseField!: string;
-
-        /**
-         * example ResponseSubstruct1 array field*
-         */
-
-        @IsDefined({ each: true })
-        @IsObject({ each: true })
-        @ValidateNested({ each: true })
-        @Type(() => ResponseSubstruct1)
-        @ApiProperty({ description: `example ResponseSubstruct1 array field*` })
-        responseSubstruct1Array!: ResponseSubstruct1[];
-    }
-    export class RequestBody {
-        constructor(params: Required<RequestBody>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * example bytes32 field
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        bytes32Field!: string;
-
-        /**
-         * example bool field
-         */
-        @IsBoolean()
-        @ApiProperty({ description: `example bool field`, example: true })
-        boolField!: boolean;
-
-        /**
-         * example RequestSubstruct1 field
-         */
-
-        @IsDefined()
-        @IsNotEmptyObject()
-        @IsObject()
-        @ValidateNested()
-        @Type(() => RequestSubstruct1)
-        @ApiProperty({ description: `example RequestSubstruct1 field` })
-        requestSubstruct1!: RequestSubstruct1;
-
-        /**
-         * example RequestSubstruct2 array field*
-         */
-
-        @IsDefined({ each: true })
-        @IsObject({ each: true })
-        @ValidateNested({ each: true })
-        @Type(() => RequestSubstruct2)
-        @ApiProperty({ description: `example RequestSubstruct2 array field*` })
-        requestSubstruct2Array!: RequestSubstruct2[];
-    }
-    export class Request {
-        constructor(params: Required<Request>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * Id of the attestation type.
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `Id of the attestation type.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        attestationType!: string;
-
-        /**
-         * Data source id as defined [here](enums.md).
-         */
-        @Validate(IsHash32)
-        @ApiProperty({
-            description: `Data source id as defined [here](enums.md).`,
-            example: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        })
-        sourceId!: string;
-
-        /**
-         * `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).
-         */
-        @Validate(IsHash32)
-        @ApiProperty({
-            description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).`,
-            example: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        })
-        messageIntegrityCode!: string;
-
-        /**
-         * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
-         */
-
-        @IsDefined()
-        @IsNotEmptyObject()
-        @IsObject()
-        @ValidateNested()
-        @Type(() => RequestBody)
-        @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
-        requestBody!: RequestBody;
-    }
-    export class Response {
-        constructor(params: Required<Response>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * Extracted from the request.
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `Extracted from the request.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        attestationType!: string;
-
-        /**
-         * Extracted from the request.
-         */
-        @Validate(IsHash32)
-        @ApiProperty({ description: `Extracted from the request.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-        sourceId!: string;
-
-        /**
-         * The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.
-         */
-        @Validate(IsUnsignedIntLike)
-        @ApiProperty({
-            description: `The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.`,
-            example: "123456",
-        })
-        votingRound!: string;
-
-        /**
-         * The lowest timestamp used to generate the response.
-         */
-        @Validate(IsUnsignedIntLike)
-        @ApiProperty({ description: `The lowest timestamp used to generate the response.`, example: "123456" })
-        lowestUsedTimestamp!: string;
-
-        /**
-         * Extracted from the request.
-         */
-
-        @IsDefined()
-        @IsNotEmptyObject()
-        @IsObject()
-        @ValidateNested()
-        @Type(() => RequestBody)
-        @ApiProperty({ description: `Extracted from the request.` })
-        requestBody!: RequestBody;
-
-        /**
-         * Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.
-         */
-
-        @IsDefined()
-        @IsNotEmptyObject()
-        @IsObject()
-        @ValidateNested()
-        @Type(() => ResponseBody)
-        @ApiProperty({
-            description: `Data defining the response. The verification rules for the construction of the response body and the type are defined per specific 'attestationType'.`,
-        })
-        responseBody!: ResponseBody;
-    }
-    export class Proof {
-        constructor(params: Required<Proof>) {
-            Object.assign(this, params);
-        }
-
-        /**
-         * Merkle proof corresponding to the attestation response.
-         */
-        @Validate(IsHash32, { each: true })
-        @ApiProperty({
-            description: `Merkle proof corresponding to the attestation response.`,
-            example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
-        })
-        merkleProof!: string[];
-
-        /**
-         * Attestation response.
-         */
-
-        @IsDefined()
-        @IsNotEmptyObject()
-        @IsObject()
-        @ValidateNested()
-        @Type(() => Response)
-        @ApiProperty({ description: `Attestation response.` })
-        data!: Response;
-    }
-
-    export class RequestNoMic extends OmitType<Request, "messageIntegrityCode">(Request, ["messageIntegrityCode"] as const) {}
 }
+
+/**
+ * Validator constraint if the given value is a number or 0x-prefixed hexadecimal string.
+ */
+@ValidatorConstraint({ name: "signed-int", async: false })
+class IsSignedIntLike implements ValidatorConstraintInterface {
+    /**
+     * Validates if the given value is a number or 0x-prefixed hexadecimal string.
+     * @param text
+     * @param args
+     * @returns
+     */
+    validate(text: any, _args: ValidationArguments) {
+        return typeof text === "string" && (/^-?0x[0-9a-fA-F]+$/i.test(text) || /^-?[0-9]+$/i.test(text));
+    }
+
+    /**
+     * Returns the default error message template.
+     * @param args
+     * @returns
+     */
+    defaultMessage(_args: ValidationArguments) {
+        return "($property) value ($value) is not a signed decimal integer in string or signed 0x-prefixed hexadecimal string";
+    }
+}
+
+/**
+ * Validator constraint if the given value is a 0x-prefixed hexadecimal string representing 32 bytes.
+ */
+@ValidatorConstraint({ name: "hash-32", async: false })
+class IsHash32 implements ValidatorConstraintInterface {
+    /**
+     * Validates if the given value is a 0x-prefixed hexadecimal string representing 32 bytes.
+     * @param text
+     * @param args
+     * @returns
+     */
+    validate(text: any, _args: ValidationArguments) {
+        return typeof text === "string" && /^0x[0-9a-f]{64}$/i.test(text);
+    }
+
+    /**
+     * Returns the default error message template.
+     * @param args
+     * @returns
+     */
+    defaultMessage(_args: ValidationArguments) {
+        return "($property) value ($value) is not 0x-prefixed hexadecimal string representing 32 bytes";
+    }
+}
+
+/**
+ * Validator constraint if the given value is a 0x-prefixed hexadecimal string
+ */
+@ValidatorConstraint({ name: "hash-0x", async: false })
+class Is0xHex implements ValidatorConstraintInterface {
+    /**
+     * Validates if the given value is a 0x-prefixed hexadecimal string
+     * @param text
+     * @param args
+     * @returns
+     */
+    validate(text: any, _args: ValidationArguments) {
+        return typeof text === "string" && /^0x[0-9a-f]+$/i.test(text);
+    }
+
+    /**
+     * Returns the default error message template.
+     * @param args
+     * @returns
+     */
+    defaultMessage(_args: ValidationArguments) {
+        return "($property) value ($value) is not 0x-prefixed hexadecimal string";
+    }
+}
+
+/**
+ * Validator constraint if the given value is an EVM address, hence 0x-prefixed hexadecimal string representing 20 bytes.
+ */
+@ValidatorConstraint({ name: "evm-address", async: false })
+class IsEVMAddress implements ValidatorConstraintInterface {
+    /**
+     * Validates if the given value is an EVM address, hence 0x-prefixed hexadecimal string representing 20 bytes.
+     * @param text
+     * @param args
+     * @returns
+     */
+    validate(text: any, _args: ValidationArguments) {
+        return typeof text === "string" && /^0x[0-9a-f]{40}$/i.test(text);
+    }
+
+    /**
+     * Returns the default error message template.
+     * @param args
+     * @returns
+     */
+    defaultMessage(_args: ValidationArguments) {
+        return "($property) value ($value) is not 0x-prefixed hexadecimal string representing 20 bytes (EVM address)";
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// DTOs /////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+export class TypeTemplate_RequestSubstruct2 {
+    constructor(params: Required<TypeTemplate_RequestSubstruct2>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * example bytes32 field
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    templateStructField!: string;
+
+    /**
+     * example int256 array field
+     */
+    @Validate(IsUnsignedIntLike, { each: true })
+    @ApiProperty({ description: `example int256 array field`, example: ["123"] })
+    intArrayField!: string[];
+
+    /**
+     * example bool array field*
+     */
+    @IsBoolean({ each: true })
+    @ApiProperty({ description: `example bool array field*`, example: [true] })
+    boolArrayField!: boolean[];
+}
+export class TypeTemplate_RequestSubstruct1 {
+    constructor(params: Required<TypeTemplate_RequestSubstruct1>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * example bytes32 field
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    templateStructField!: string;
+
+    /**
+     * example uint256 array field
+     */
+    @Validate(IsUnsignedIntLike, { each: true })
+    @ApiProperty({ description: `example uint256 array field`, example: ["123"] })
+    uintArrayField!: string[];
+
+    /**
+     * example bool array field*
+     */
+    @IsBoolean({ each: true })
+    @ApiProperty({ description: `example bool array field*`, example: [true] })
+    boolArrayField!: boolean[];
+}
+export class TypeTemplate_ResponseSubstruct1 {
+    constructor(params: Required<TypeTemplate_ResponseSubstruct1>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * description*
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `description*`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    templateStructField!: string;
+}
+export class TypeTemplate_ResponseBody {
+    constructor(params: Required<TypeTemplate_ResponseBody>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * example bytes32 field
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    templateResponseField!: string;
+
+    /**
+     * example ResponseSubstruct1 array field*
+     */
+
+    @IsDefined({ each: true })
+    @IsObject({ each: true })
+    @ValidateNested({ each: true })
+    @Type(() => TypeTemplate_ResponseSubstruct1)
+    @ApiProperty({ description: `example ResponseSubstruct1 array field*` })
+    responseSubstruct1Array!: TypeTemplate_ResponseSubstruct1[];
+}
+export class TypeTemplate_RequestBody {
+    constructor(params: Required<TypeTemplate_RequestBody>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * example bytes32 field
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    bytes32Field!: string;
+
+    /**
+     * example bool field
+     */
+    @IsBoolean()
+    @ApiProperty({ description: `example bool field`, example: true })
+    boolField!: boolean;
+
+    /**
+     * example RequestSubstruct1 field
+     */
+
+    @IsDefined()
+    @IsNotEmptyObject()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => TypeTemplate_RequestSubstruct1)
+    @ApiProperty({ description: `example RequestSubstruct1 field` })
+    requestSubstruct1!: TypeTemplate_RequestSubstruct1;
+
+    /**
+     * example RequestSubstruct2 array field*
+     */
+
+    @IsDefined({ each: true })
+    @IsObject({ each: true })
+    @ValidateNested({ each: true })
+    @Type(() => TypeTemplate_RequestSubstruct2)
+    @ApiProperty({ description: `example RequestSubstruct2 array field*` })
+    requestSubstruct2Array!: TypeTemplate_RequestSubstruct2[];
+}
+export class TypeTemplate_Request {
+    constructor(params: Required<TypeTemplate_Request>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * Id of the attestation type.
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `Id of the attestation type.`, example: "0x5479706554656d706c6174650000000000000000000000000000000000000000" })
+    attestationType!: string;
+
+    /**
+     * Data source id as defined [here](enums.md).
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `Data source id as defined [here](enums.md).`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    sourceId!: string;
+
+    /**
+     * `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).
+     */
+    @Validate(IsHash32)
+    @ApiProperty({
+        description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).`,
+        example: "0x0000000000000000000000000000000000000000000000000000000000000000",
+    })
+    messageIntegrityCode!: string;
+
+    /**
+     * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
+     */
+
+    @IsDefined()
+    @IsNotEmptyObject()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => TypeTemplate_RequestBody)
+    @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
+    requestBody!: TypeTemplate_RequestBody;
+}
+export class TypeTemplate_Response {
+    constructor(params: Required<TypeTemplate_Response>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * Extracted from the request.
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `Extracted from the request.`, example: "0x5479706554656d706c6174650000000000000000000000000000000000000000" })
+    attestationType!: string;
+
+    /**
+     * Extracted from the request.
+     */
+    @Validate(IsHash32)
+    @ApiProperty({ description: `Extracted from the request.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    sourceId!: string;
+
+    /**
+     * The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({
+        description: `The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.`,
+        example: "123",
+    })
+    votingRound!: string;
+
+    /**
+     * The lowest timestamp used to generate the response.
+     */
+    @Validate(IsUnsignedIntLike)
+    @ApiProperty({ description: `The lowest timestamp used to generate the response.`, example: "123" })
+    lowestUsedTimestamp!: string;
+
+    /**
+     * Extracted from the request.
+     */
+
+    @IsDefined()
+    @IsNotEmptyObject()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => TypeTemplate_RequestBody)
+    @ApiProperty({ description: `Extracted from the request.` })
+    requestBody!: TypeTemplate_RequestBody;
+
+    /**
+     * Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.
+     */
+
+    @IsDefined()
+    @IsNotEmptyObject()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => TypeTemplate_ResponseBody)
+    @ApiProperty({
+        description: `Data defining the response. The verification rules for the construction of the response body and the type are defined per specific 'attestationType'.`,
+    })
+    responseBody!: TypeTemplate_ResponseBody;
+}
+export class TypeTemplate_Proof {
+    constructor(params: Required<TypeTemplate_Proof>) {
+        Object.assign(this, params);
+    }
+
+    /**
+     * Merkle proof corresponding to the attestation response.
+     */
+    @Validate(IsHash32, { each: true })
+    @ApiProperty({
+        description: `Merkle proof corresponding to the attestation response.`,
+        example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
+    })
+    merkleProof!: string[];
+
+    /**
+     * Attestation response.
+     */
+
+    @IsDefined()
+    @IsNotEmptyObject()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => TypeTemplate_Response)
+    @ApiProperty({ description: `Attestation response.` })
+    data!: TypeTemplate_Response;
+}
+
+export class TypeTemplate_RequestNoMic extends OmitType<TypeTemplate_Request, "messageIntegrityCode">(TypeTemplate_Request, [
+    "messageIntegrityCode",
+] as const) {}

@@ -3,11 +3,11 @@ import { TypeTemplateVerifierService } from "../service/type-template-verifier.s
 import { TypeTemplateVerifierController } from "./type-template-verifier.controller";
 import { readFileSync } from "fs";
 import { ExampleData } from "../utils";
-import { TypeTemplate } from "../dto/TypeTemplate.dto";
+import { TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 
 describe("AppController", () => {
     let appController: TypeTemplateVerifierController;
-    let exampleData: ExampleData<TypeTemplate.RequestNoMic, TypeTemplate.Request, TypeTemplate.Response>;
+    let exampleData: ExampleData<TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response>;
 
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({

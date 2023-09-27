@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";
 import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
-import { TypeTemplate } from "../dto/TypeTemplate.dto";
+import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 import { EncodedRequestBody } from "../dto/encoded-request.dto";
 import { AttestationResponseDTO } from "../dto/verification-response.dto";
 
@@ -21,7 +21,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate.Response>> {
+    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
         return this.verifierService.verifyEncodedRequest(body);
     }
 
@@ -32,7 +32,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareResponse")
-    async prepareResponse(@Body() body: TypeTemplate.RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate.Response>> {
+    async prepareResponse(@Body() body: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -42,7 +42,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("mic")
-    async mic(@Body() body: TypeTemplate.RequestNoMic): Promise<string> {
+    async mic(@Body() body: TypeTemplate_RequestNoMic): Promise<string> {
         return this.verifierService.mic(body);
     }
 
@@ -53,7 +53,7 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareRequest")
-    async prepareRequest(@Body() body: TypeTemplate.RequestNoMic): Promise<EncodedRequestBody> {
+    async prepareRequest(@Body() body: TypeTemplate_RequestNoMic): Promise<EncodedRequestBody> {
         return this.verifierService.prepareRequest(body);
     }
 }
