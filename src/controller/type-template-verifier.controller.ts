@@ -1,11 +1,12 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
-import { ApiSecurity } from "@nestjs/swagger";
+import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";
 import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
 import { TypeTemplate } from "../dto/TypeTemplate.dto";
 import { EncodedRequestBody } from "../dto/encoded-request.dto";
 import { AttestationResponseDTO } from "../dto/verification-response.dto";
 
+@ApiTags("TypeTemplate")
 @Controller("TypeTemplate")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
