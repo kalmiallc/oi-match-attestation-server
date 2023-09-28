@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////
+// THIS IS GENERATED CODE. DO NOT CHANGE THIS FILE MANUALLY .//
+///////////////////////////////////////////////////////////////
+
 import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";

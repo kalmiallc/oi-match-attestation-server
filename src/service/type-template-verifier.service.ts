@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
 import { ExampleData } from "src/utils";
-import { TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 import { EncodedRequestBody } from "../dto/encoded-request.dto";
+import { TypeTemplate_Request, TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
-import { MIC_SALT } from "../external-libs/ts/utils";
 import { AttestationResponse, AttestationStatus } from "../external-libs/ts/AttestationResponse";
+import { MIC_SALT } from "../external-libs/ts/utils";
 
 @Injectable()
 export class TypeTemplateVerifierService {
@@ -21,9 +21,11 @@ export class TypeTemplateVerifierService {
         const requestJSON = this.store.parseRequest(request.abiEncodedRequest);
         console.dir(requestJSON, { depth: null });
 
-        //-$$$<start-verifyEncodedRequest> of the custom code section. Do not change this comment.
+        //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
 
-        //-$$$<end-verifyEncodedRequest> of the custom section. Do not change this comment.
+        // PUT YOUR CODE HERE
+
+        //-$$$<end-verifyEncodedRequest> End of custom code section. Do not change this comment.
 
         // Example of response body. Delete this example and provide value for variable 'response' in the custom code section above.
         const response: AttestationResponse<TypeTemplate_Response> = {
@@ -37,9 +39,11 @@ export class TypeTemplateVerifierService {
     public async prepareResponse(request: TypeTemplate_RequestNoMic): Promise<AttestationResponse<TypeTemplate_Response>> {
         console.dir(request, { depth: null });
 
-        //-$$$<start-prepareResponse> of the custom code section. Do not change this comment.
+        //-$$$<start-prepareResponse> Start of custom code section. Do not change this comment.
 
-        //-$$$<end-prepareResponse> of the custom section. Do not change this comment.
+        // PUT YOUR CUSTOM CODE HERE
+
+        //-$$$<end-prepareResponse> End of custom code section. Do not change this comment.
 
         // Example of response body. Delete this example and provide value for variable 'response' in the custom code section above.
         const response: AttestationResponse<TypeTemplate_Response> = {
@@ -56,9 +60,11 @@ export class TypeTemplateVerifierService {
     public async mic(request: TypeTemplate_RequestNoMic): Promise<string> {
         console.dir(request, { depth: null });
 
-        //-$$$<start-mic> of the custom code section. Do not change this comment.
+        //-$$$<start-mic> Start of custom code section. Do not change this comment.
 
-        //-$$$<end-mic> of the custom section. Do not change this comment.
+        // PUT YOUR CODE HERE
+
+        //-$$$<end-mic> End of custom code section. Do not change this comment.
 
         // Example of response body. Delete this example and provide value for variable 'response' in the custom code section above.
         const response: TypeTemplate_Response = {
@@ -72,9 +78,11 @@ export class TypeTemplateVerifierService {
     public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<EncodedRequestBody> {
         console.dir(request, { depth: null });
 
-        //-$$$<start-prepareRequest> of the custom code section. Do not change this comment.
+        //-$$$<start-prepareRequest> Start of custom code section. Do not change this comment.
 
-        //-$$$<end-prepareRequest> of the custom section. Do not change this comment.
+        // PUT YOUR CODE HERE
+
+        //-$$$<end-prepareRequest> End of custom code section. Do not change this comment.
 
         // Example of response body. Delete this example and provide value for variable 'response' in the custom code section above.
         const response: TypeTemplate_Response = {
