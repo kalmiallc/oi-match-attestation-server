@@ -7,8 +7,7 @@ import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";
 import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
 import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
-import { EncodedRequestBody } from "../dto/encoded-request.dto";
-import { AttestationResponseDTO } from "../dto/verification-response.dto";
+import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../dto/generic.dto";
 
 @ApiTags("TypeTemplate")
 @Controller("TypeTemplate")
@@ -26,7 +25,7 @@ export class TypeTemplateVerifierController {
     @HttpCode(200)
     @Post()
     async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
-        return this.verifierService.verifyEncodedRequest(body);
+        return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest);
     }
 
     /**
@@ -46,8 +45,10 @@ export class TypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("mic")
-    async mic(@Body() body: TypeTemplate_RequestNoMic): Promise<string> {
-        return this.verifierService.mic(body);
+    async mic(@Body() body: TypeTemplate_RequestNoMic): Promise<MicResponse> {
+        return {
+            messageIntegrityCode: await this.verifierService.mic(body),
+        } as MicResponse;
     }
 
     /**
@@ -58,6 +59,8 @@ export class TypeTemplateVerifierController {
     @HttpCode(200)
     @Post("prepareRequest")
     async prepareRequest(@Body() body: TypeTemplate_RequestNoMic): Promise<EncodedRequestBody> {
-        return this.verifierService.prepareRequest(body);
+        return {
+            abiEncodedRequest: await this.verifierService.prepareRequest(body),
+        } as EncodedRequestBody;
     }
 }

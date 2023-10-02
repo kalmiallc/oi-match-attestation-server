@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
-import { ExampleData } from "src/utils";
-import { EncodedRequestBody } from "../dto/encoded-request.dto";
 import { TypeTemplate_Request, TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponse, AttestationStatus } from "../external-libs/ts/AttestationResponse";
+import { ExampleData } from "../external-libs/ts/interfaces";
 import { MIC_SALT } from "../external-libs/ts/utils";
 
 @Injectable()
@@ -12,18 +11,22 @@ export class TypeTemplateVerifierService {
     store!: AttestationDefinitionStore;
     exampleData!: ExampleData<TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response>;
 
+    //-$$$<start-constructor> Start of custom code section. Do not change this comment.
+
     constructor() {
         this.store = new AttestationDefinitionStore("type-definitions");
         this.exampleData = JSON.parse(readFileSync("src/example-data/TypeTemplate.json", "utf8"));
     }
 
-    public async verifyEncodedRequest(request: EncodedRequestBody): Promise<AttestationResponse<TypeTemplate_Response>> {
-        const requestJSON = this.store.parseRequest(request.abiEncodedRequest);
+    //-$$$<end-constructor> End of custom code section. Do not change this comment.
+
+    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponse<TypeTemplate_Response>> {
+        const requestJSON = this.store.parseRequest(abiEncodedRequest);
         console.dir(requestJSON, { depth: null });
 
         //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
 
-        // PUT YOUR CODE HERE
+        // PUT YOUR CUSTOM CODE HERE
 
         //-$$$<end-verifyEncodedRequest> End of custom code section. Do not change this comment.
 
@@ -62,7 +65,7 @@ export class TypeTemplateVerifierService {
 
         //-$$$<start-mic> Start of custom code section. Do not change this comment.
 
-        // PUT YOUR CODE HERE
+        // PUT YOUR CUSTOM CODE HERE
 
         //-$$$<end-mic> End of custom code section. Do not change this comment.
 
@@ -75,12 +78,12 @@ export class TypeTemplateVerifierService {
         return this.store.attestationResponseHash(response, MIC_SALT)!;
     }
 
-    public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<EncodedRequestBody> {
+    public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<string> {
         console.dir(request, { depth: null });
 
         //-$$$<start-prepareRequest> Start of custom code section. Do not change this comment.
 
-        // PUT YOUR CODE HERE
+        // PUT YOUR CUSTOM CODE HERE
 
         //-$$$<end-prepareRequest> End of custom code section. Do not change this comment.
 
@@ -95,9 +98,6 @@ export class TypeTemplateVerifierService {
             messageIntegrityCode: this.store.attestationResponseHash(response, MIC_SALT)!,
         } as TypeTemplate_Request;
 
-        const res: EncodedRequestBody = {
-            abiEncodedRequest: this.store.encodeRequest(newRequest),
-        };
-        return res;
+        return this.store.encodeRequest(newRequest);
     }
 }

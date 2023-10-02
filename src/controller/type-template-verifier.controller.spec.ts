@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
 import { TypeTemplateVerifierController } from "./type-template-verifier.controller";
 import { readFileSync } from "fs";
-import { ExampleData } from "../utils";
+import { ExampleData } from "../external-libs/ts/interfaces";
 import { TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 
 describe("AppController", () => {
