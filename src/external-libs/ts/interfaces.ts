@@ -1,11 +1,23 @@
 /**
- * Generic interface for the request body of an attestation request.
+ * Generic interface for the request of an attestation request.
  */
 export interface ARBase {
     attestationType: string;
     sourceId: string;
     messageIntegrityCode?: string;
     requestBody: any;
+}
+
+/**
+ * Generic interface for the response of an attestation request.
+ */
+export interface ARESBase {
+    attestationType: string;
+    sourceId: string;
+    votingRound: string;
+    lowestUsedTimestamp: string;
+    requestBody: any;
+    responseBody: any;
 }
 
 /**

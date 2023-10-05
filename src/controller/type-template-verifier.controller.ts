@@ -5,6 +5,7 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../auth/apikey.guard";
+
 import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
 import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../dto/generic.dto";
@@ -25,7 +26,7 @@ export class TypeTemplateVerifierController {
     @HttpCode(200)
     @Post()
     async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
-        return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest);
+        return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
     }
 
     /**

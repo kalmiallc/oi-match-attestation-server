@@ -226,11 +226,10 @@ export class TypeTemplate_ResponseBody {
     /**
      * example ResponseSubstruct1 array field*
      */
-
-    @IsDefined({ each: true })
-    @IsObject({ each: true })
     @ValidateNested({ each: true })
     @Type(() => TypeTemplate_ResponseSubstruct1)
+    @IsDefined({ each: true })
+    @IsObject({ each: true })
     @ApiProperty({ description: `example ResponseSubstruct1 array field*` })
     responseSubstruct1Array!: TypeTemplate_ResponseSubstruct1[];
 }
@@ -256,23 +255,21 @@ export class TypeTemplate_RequestBody {
     /**
      * example RequestSubstruct1 field
      */
-
+    @ValidateNested()
+    @Type(() => TypeTemplate_RequestSubstruct1)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
-    @ValidateNested()
-    @Type(() => TypeTemplate_RequestSubstruct1)
     @ApiProperty({ description: `example RequestSubstruct1 field` })
     requestSubstruct1!: TypeTemplate_RequestSubstruct1;
 
     /**
      * example RequestSubstruct2 array field*
      */
-
-    @IsDefined({ each: true })
-    @IsObject({ each: true })
     @ValidateNested({ each: true })
     @Type(() => TypeTemplate_RequestSubstruct2)
+    @IsDefined({ each: true })
+    @IsObject({ each: true })
     @ApiProperty({ description: `example RequestSubstruct2 array field*` })
     requestSubstruct2Array!: TypeTemplate_RequestSubstruct2[];
 }
@@ -308,12 +305,11 @@ export class TypeTemplate_Request {
     /**
      * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
      */
-
+    @ValidateNested()
+    @Type(() => TypeTemplate_RequestBody)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
-    @ValidateNested()
-    @Type(() => TypeTemplate_RequestBody)
     @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
     requestBody!: TypeTemplate_RequestBody;
 }
@@ -337,13 +333,10 @@ export class TypeTemplate_Response {
     sourceId!: string;
 
     /**
-     * The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.
+     * The id of the state connector round in which the request was considered.
      */
     @Validate(IsUnsignedIntLike)
-    @ApiProperty({
-        description: `The id of the state connector round in which the request was considered. This is a security measure to prevent collision of attestation hashes.`,
-        example: "123",
-    })
+    @ApiProperty({ description: `The id of the state connector round in which the request was considered.`, example: "123" })
     votingRound!: string;
 
     /**
@@ -356,24 +349,22 @@ export class TypeTemplate_Response {
     /**
      * Extracted from the request.
      */
-
+    @ValidateNested()
+    @Type(() => TypeTemplate_RequestBody)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
-    @ValidateNested()
-    @Type(() => TypeTemplate_RequestBody)
     @ApiProperty({ description: `Extracted from the request.` })
     requestBody!: TypeTemplate_RequestBody;
 
     /**
      * Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.
      */
-
+    @ValidateNested()
+    @Type(() => TypeTemplate_ResponseBody)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
-    @ValidateNested()
-    @Type(() => TypeTemplate_ResponseBody)
     @ApiProperty({
         description: `Data defining the response. The verification rules for the construction of the response body and the type are defined per specific 'attestationType'.`,
     })
@@ -397,12 +388,11 @@ export class TypeTemplate_Proof {
     /**
      * Attestation response.
      */
-
+    @ValidateNested()
+    @Type(() => TypeTemplate_Response)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
-    @ValidateNested()
-    @Type(() => TypeTemplate_Response)
     @ApiProperty({ description: `Attestation response.` })
     data!: TypeTemplate_Response;
 }

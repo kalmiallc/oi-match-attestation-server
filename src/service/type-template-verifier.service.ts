@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
 import { TypeTemplate_Request, TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
 import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
-import { AttestationResponse, AttestationStatus } from "../external-libs/ts/AttestationResponse";
+import { AttestationResponse, AttestationResponseStatus } from "../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../external-libs/ts/interfaces";
 import { MIC_SALT } from "../external-libs/ts/utils";
 
@@ -21,7 +21,7 @@ export class TypeTemplateVerifierService {
     //-$$$<end-constructor> End of custom code section. Do not change this comment.
 
     public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponse<TypeTemplate_Response>> {
-        const requestJSON = this.store.parseRequest(abiEncodedRequest);
+        const requestJSON = this.store.parseRequest<TypeTemplate_Request>(abiEncodedRequest);
         console.dir(requestJSON, { depth: null });
 
         //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
@@ -32,7 +32,7 @@ export class TypeTemplateVerifierService {
 
         // Example of response body. Delete this example and provide value for variable 'response' in the custom code section above.
         const response: AttestationResponse<TypeTemplate_Response> = {
-            status: AttestationStatus.VALID,
+            status: AttestationResponseStatus.VALID,
             response: this.exampleData.response,
         };
 
@@ -50,7 +50,7 @@ export class TypeTemplateVerifierService {
 
         // Example of response body. Delete this example and provide value for variable 'response' in the custom code section above.
         const response: AttestationResponse<TypeTemplate_Response> = {
-            status: AttestationStatus.VALID,
+            status: AttestationResponseStatus.VALID,
             response: {
                 ...this.exampleData.response,
                 ...request,
@@ -60,7 +60,7 @@ export class TypeTemplateVerifierService {
         return response;
     }
 
-    public async mic(request: TypeTemplate_RequestNoMic): Promise<string> {
+    public async mic(request: TypeTemplate_RequestNoMic): Promise<string | undefined> {
         console.dir(request, { depth: null });
 
         //-$$$<start-mic> Start of custom code section. Do not change this comment.
@@ -75,10 +75,11 @@ export class TypeTemplateVerifierService {
             ...request,
         };
 
-        return this.store.attestationResponseHash(response, MIC_SALT)!;
+        if (!response) return undefined;
+        return this.store.attestationResponseHash<TypeTemplate_Response>(response, MIC_SALT)!;
     }
 
-    public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<string> {
+    public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<string | undefined> {
         console.dir(request, { depth: null });
 
         //-$$$<start-prepareRequest> Start of custom code section. Do not change this comment.
@@ -93,9 +94,10 @@ export class TypeTemplateVerifierService {
             ...request,
         };
 
+        if (!response) return undefined;
         const newRequest = {
             ...request,
-            messageIntegrityCode: this.store.attestationResponseHash(response, MIC_SALT)!,
+            messageIntegrityCode: this.store.attestationResponseHash<TypeTemplate_Response>(response, MIC_SALT)!,
         } as TypeTemplate_Request;
 
         return this.store.encodeRequest(newRequest);
