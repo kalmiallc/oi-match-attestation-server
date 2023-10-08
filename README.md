@@ -4,7 +4,7 @@
 
 Welcome to Flare verifier server template.
 
-This template can be used to implement an verifier server that implements the required features for adding new attestation types. Read mora about adding attestation types and state connector protocol in the [docs page](https://docs.flare.network/tech/state-connector/) or directly in the [reference repo](link when we publish TODO:)
+This template can be used to implement an verifier server that implements the required features for adding new attestation types. Read mora about adding attestation types and State Connector Protocol in the [docs page](https://docs.flare.network/tech/state-connector/) or directly in the [State Connector Protocol reference repo](https://gitlab.com/flarenetwork/state-connector-protocol/)
 
 This template was created using [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
