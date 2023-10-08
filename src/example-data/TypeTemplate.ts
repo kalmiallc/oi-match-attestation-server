@@ -11,8 +11,8 @@ import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefin
 
 const ATTESTATION_TYPE_NAME = "TypeTemplate";
 
-function randomProof(votingRound: number = 1234, sourceId?: string): TypeTemplate_Proof {
-    const bodies = randomBodies();
+function randomProof(votingRound: number = 1234, sourceId?: string, fullRandom = false): TypeTemplate_Proof {
+    const bodies = randomBodies(fullRandom);
     const response = {
         attestationType: encodeAttestationName(ATTESTATION_TYPE_NAME),
         sourceId: encodeAttestationName(sourceId ?? "BTC"),
@@ -29,10 +29,10 @@ function randomProof(votingRound: number = 1234, sourceId?: string): TypeTemplat
     return proof;
 }
 
-function randomBodies() {
+function randomBodies(fullRandom = false) {
     const requestBody = {
-        bytes32Field: randSol("bytes32", "TypeTemplate"),
-        boolField: randSol("bool", "TypeTemplate"),
+        bytes32Field: randSol("bytes32", "TypeTemplate" + (fullRandom ? Math.random().toString() : "")),
+        boolField: randSol("bool", "TypeTemplate" + (fullRandom ? Math.random().toString() : "")),
         requestSubstruct1: {
             templateStructField: randSol("bytes32", "TypeTemplate"),
             uintArrayField: [randSol("uint256", "TypeTemplate"), randSol("uint256", "TypeTemplate"), randSol("uint256", "TypeTemplate")],
@@ -58,7 +58,7 @@ function randomBodies() {
     } as TypeTemplate_RequestBody;
 
     const responseBody = {
-        templateResponseField: randSol("bytes32", "TypeTemplate"),
+        templateResponseField: randSol("bytes32", "TypeTemplate" + (fullRandom ? Math.random().toString() : "")),
         responseSubstruct1Array: [
             {
                 templateStructField: randSol("bytes32", "TypeTemplate"),
@@ -74,9 +74,9 @@ function randomBodies() {
     return { requestBody, responseBody };
 }
 
-export function randomExample(votingRound: number = 1234, sourceId?: string) {
-    const store = new AttestationDefinitionStore();
-    const proof = randomProof(votingRound, sourceId);
+export function randomExample(votingRound: number = 1234, sourceId?: string, fullRandom = false) {
+    const store = new AttestationDefinitionStore("type-definitions");
+    const proof = randomProof(votingRound, sourceId, fullRandom);
     const requestNoMic = {
         attestationType: proof.data.attestationType,
         sourceId: proof.data.sourceId,
@@ -93,6 +93,6 @@ export function randomExample(votingRound: number = 1234, sourceId?: string) {
     return { requestNoMic, response, request, messageIntegrityCode, encodedRequestZeroMic, encodedRequest, proof };
 }
 
-export function randomTypeTemplateExample(votingRound: number = 1234, sourceId?: string) {
-    return randomExample(votingRound, sourceId);
+export function randomTypeTemplateExample(votingRound: number = 1234, sourceId?: string, fullRandom = false) {
+    return randomExample(votingRound, sourceId, fullRandom);
 }

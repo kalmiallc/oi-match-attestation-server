@@ -153,24 +153,24 @@ export class TypeTemplate_RequestSubstruct2 {
     }
 
     /**
-     * example bytes32 field
+     * example bytes32 field with explanation
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
     templateStructField!: string;
 
     /**
-     * example int256 array field
+     * example int256 array field with explanation
      */
     @Validate(IsUnsignedIntLike, { each: true })
-    @ApiProperty({ description: `example int256 array field`, example: ["123"] })
+    @ApiProperty({ description: `example int256 array field with explanation`, example: ["123"] })
     intArrayField!: string[];
 
     /**
-     * example bool array field*
+     * example bool array field with explanation*
      */
     @IsBoolean({ each: true })
-    @ApiProperty({ description: `example bool array field*`, example: [true] })
+    @ApiProperty({ description: `example bool array field with explanation*`, example: [true] })
     boolArrayField!: boolean[];
 }
 export class TypeTemplate_RequestSubstruct1 {
@@ -179,24 +179,24 @@ export class TypeTemplate_RequestSubstruct1 {
     }
 
     /**
-     * example bytes32 field
+     * example bytes32 field with explanation
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
     templateStructField!: string;
 
     /**
-     * example uint256 array field
+     * example uint256 array field with explanation
      */
     @Validate(IsUnsignedIntLike, { each: true })
-    @ApiProperty({ description: `example uint256 array field`, example: ["123"] })
+    @ApiProperty({ description: `example uint256 array field with explanation`, example: ["123"] })
     uintArrayField!: string[];
 
     /**
-     * example bool array field*
+     * example bool array field with explanation*
      */
     @IsBoolean({ each: true })
-    @ApiProperty({ description: `example bool array field*`, example: [true] })
+    @ApiProperty({ description: `example bool array field with explanation*`, example: [true] })
     boolArrayField!: boolean[];
 }
 export class TypeTemplate_ResponseSubstruct1 {
@@ -217,20 +217,20 @@ export class TypeTemplate_ResponseBody {
     }
 
     /**
-     * example bytes32 field
+     * example bytes32 field with explanation
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
     templateResponseField!: string;
 
     /**
-     * example ResponseSubstruct1 array field*
+     * example ResponseSubstruct1 array field with explanation*
      */
     @ValidateNested({ each: true })
     @Type(() => TypeTemplate_ResponseSubstruct1)
     @IsDefined({ each: true })
     @IsObject({ each: true })
-    @ApiProperty({ description: `example ResponseSubstruct1 array field*` })
+    @ApiProperty({ description: `example ResponseSubstruct1 array field with explanation*` })
     responseSubstruct1Array!: TypeTemplate_ResponseSubstruct1[];
 }
 export class TypeTemplate_RequestBody {
@@ -239,38 +239,38 @@ export class TypeTemplate_RequestBody {
     }
 
     /**
-     * example bytes32 field
+     * example bytes32 field with explanation
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `example bytes32 field`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
     bytes32Field!: string;
 
     /**
-     * example bool field
+     * example bool field field with explanation
      */
     @IsBoolean()
-    @ApiProperty({ description: `example bool field`, example: true })
+    @ApiProperty({ description: `example bool field field with explanation`, example: true })
     boolField!: boolean;
 
     /**
-     * example RequestSubstruct1 field
+     * example RequestSubstruct1 field with explanation
      */
     @ValidateNested()
     @Type(() => TypeTemplate_RequestSubstruct1)
     @IsDefined()
     @IsNotEmptyObject()
     @IsObject()
-    @ApiProperty({ description: `example RequestSubstruct1 field` })
+    @ApiProperty({ description: `example RequestSubstruct1 field with explanation` })
     requestSubstruct1!: TypeTemplate_RequestSubstruct1;
 
     /**
-     * example RequestSubstruct2 array field*
+     * example RequestSubstruct2 array field with explanation*
      */
     @ValidateNested({ each: true })
     @Type(() => TypeTemplate_RequestSubstruct2)
     @IsDefined({ each: true })
     @IsObject({ each: true })
-    @ApiProperty({ description: `example RequestSubstruct2 array field*` })
+    @ApiProperty({ description: `example RequestSubstruct2 array field with explanation*` })
     requestSubstruct2Array!: TypeTemplate_RequestSubstruct2[];
 }
 export class TypeTemplate_Request {
@@ -286,18 +286,18 @@ export class TypeTemplate_Request {
     attestationType!: string;
 
     /**
-     * Data source id as defined [here](enums.md).
+     * Id of the data source.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Data source id as defined [here](enums.md).`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
+    @ApiProperty({ description: `Id of the data source.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
     sourceId!: string;
 
     /**
-     * `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).
+     * `MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).
      */
     @Validate(IsHash32)
     @ApiProperty({
-        description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).`,
+        description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).`,
         example: "0x0000000000000000000000000000000000000000000000000000000000000000",
     })
     messageIntegrityCode!: string;

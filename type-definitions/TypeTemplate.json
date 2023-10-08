@@ -31,7 +31,7 @@
     "description": "Toplevel request",
     "above": "",
     "below": "",
-    "fullComment": " @notice Toplevel request\n @param attestationType Id of the attestation type.\n @param sourceId Data source id as defined [here](enums.md).\n @param messageIntegrityCode `MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code).\n @param requestBody Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.",
+    "fullComment": " @notice Toplevel request\n @param attestationType Id of the attestation type.\n @param sourceId Id of the data source.\n @param messageIntegrityCode `MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).\n @param requestBody Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.",
     "params": [
       {
         "name": "attestationType",
@@ -43,13 +43,13 @@
         "name": "sourceId",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "Data source id as defined [here](enums.md)."
+        "comment": "Id of the data source."
       },
       {
         "name": "messageIntegrityCode",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "`MessageIntegrityCode` that is derived from the expected response as defined [here](../attestation-objects/MIC.md#message-integrity-code)."
+        "comment": "`MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code)."
       },
       {
         "name": "requestBody",
@@ -109,31 +109,31 @@
     "description": "Request body for TypeTemplate attestation type",
     "above": "Additional explanation for 'above' slot in generated Markdown docs",
     "below": "Additional explanation for 'below' slot in generated Markdown docs",
-    "fullComment": " @notice Request body for TypeTemplate attestation type\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param bytes32Field example bytes32 field\n @param boolField example bool field\n @param requestSubstruct1 example RequestSubstruct1 field\n @param requestSubstruct2Array example RequestSubstruct2 array field*",
+    "fullComment": " @notice Request body for TypeTemplate attestation type\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param bytes32Field example bytes32 field with explanation\n @param boolField example bool field field with explanation\n @param requestSubstruct1 example RequestSubstruct1 field with explanation\n @param requestSubstruct2Array example RequestSubstruct2 array field with explanation*",
     "params": [
       {
         "name": "bytes32Field",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "example bytes32 field"
+        "comment": "example bytes32 field with explanation"
       },
       {
         "name": "boolField",
         "type": "bool",
         "typeSimple": "bool",
-        "comment": "example bool field"
+        "comment": "example bool field field with explanation"
       },
       {
         "name": "requestSubstruct1",
         "type": "struct TypeTemplate.RequestSubstruct1",
         "typeSimple": "RequestSubstruct1",
-        "comment": "example RequestSubstruct1 field"
+        "comment": "example RequestSubstruct1 field with explanation"
       },
       {
         "name": "requestSubstruct2Array",
         "type": "struct TypeTemplate.RequestSubstruct2[]",
         "typeSimple": "RequestSubstruct2[]",
-        "comment": "example RequestSubstruct2 array field*"
+        "comment": "example RequestSubstruct2 array field with explanation*"
       }
     ]
   },
@@ -142,19 +142,19 @@
     "description": "Response body for TypeTemplate attestation type.",
     "above": "Additional explanation for 'above' slot in generated Markdown docs",
     "below": "Additional explanation for 'below' slot in generated Markdown docs",
-    "fullComment": " @notice Response body for TypeTemplate attestation type.\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateResponseField example bytes32 field\n @param responseSubstruct1Array example ResponseSubstruct1 array field*",
+    "fullComment": " @notice Response body for TypeTemplate attestation type.\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateResponseField example bytes32 field with explanation\n @param responseSubstruct1Array example ResponseSubstruct1 array field with explanation*",
     "params": [
       {
         "name": "templateResponseField",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "example bytes32 field"
+        "comment": "example bytes32 field with explanation"
       },
       {
         "name": "responseSubstruct1Array",
         "type": "struct TypeTemplate.ResponseSubstruct1[]",
         "typeSimple": "ResponseSubstruct1[]",
-        "comment": "example ResponseSubstruct1 array field*"
+        "comment": "example ResponseSubstruct1 array field with explanation*"
       }
     ]
   },
@@ -164,25 +164,25 @@
       "description": "Additional struct first used in Request body fields",
       "above": "Additional explanation for 'above' slot in generated Markdown docs",
       "below": "Additional explanation for 'below' slot in generated Markdown docs",
-      "fullComment": " @notice Additional struct first used in Request body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField example bytes32 field\n @param uintArrayField example uint256 array field\n @param boolArrayField example bool array field*",
+      "fullComment": " @notice Additional struct first used in Request body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField example bytes32 field with explanation\n @param uintArrayField example uint256 array field with explanation\n @param boolArrayField example bool array field with explanation*",
       "params": [
         {
           "name": "templateStructField",
           "type": "bytes32",
           "typeSimple": "bytes32",
-          "comment": "example bytes32 field"
+          "comment": "example bytes32 field with explanation"
         },
         {
           "name": "uintArrayField",
           "type": "uint256[]",
           "typeSimple": "uint256[]",
-          "comment": "example uint256 array field"
+          "comment": "example uint256 array field with explanation"
         },
         {
           "name": "boolArrayField",
           "type": "bool[]",
           "typeSimple": "bool[]",
-          "comment": "example bool array field*"
+          "comment": "example bool array field with explanation*"
         }
       ]
     },
@@ -191,25 +191,25 @@
       "description": "Additional struct first used in Request body fields",
       "above": "Additional explanation for 'above' slot in generated Markdown docs",
       "below": "Additional explanation for 'below' slot in generated Markdown docs",
-      "fullComment": " @notice Additional struct first used in Request body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField example bytes32 field\n @param intArrayField example int256 array field\n @param boolArrayField example bool array field*",
+      "fullComment": " @notice Additional struct first used in Request body fields\n @custom:above Additional explanation for 'above' slot in generated Markdown docs\n @custom:below Additional explanation for 'below' slot in generated Markdown docs\n @param templateStructField example bytes32 field with explanation\n @param intArrayField example int256 array field with explanation\n @param boolArrayField example bool array field with explanation*",
       "params": [
         {
           "name": "templateStructField",
           "type": "bytes32",
           "typeSimple": "bytes32",
-          "comment": "example bytes32 field"
+          "comment": "example bytes32 field with explanation"
         },
         {
           "name": "intArrayField",
           "type": "int256[]",
           "typeSimple": "int256[]",
-          "comment": "example int256 array field"
+          "comment": "example int256 array field with explanation"
         },
         {
           "name": "boolArrayField",
           "type": "bool[]",
           "typeSimple": "bool[]",
-          "comment": "example bool array field*"
+          "comment": "example bool array field with explanation*"
         }
       ]
     }

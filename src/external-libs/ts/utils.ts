@@ -110,9 +110,10 @@ export function decodeAttestationName(encoded: string) {
     if (!/^0x[0-9a-fA-F]{64}$/i.test(encoded)) {
         throw new Error("Not a 0x-prefixed 32-byte hex string");
     }
+    // strip trailing zeros
     let stripped = encoded.replace(/0+$/, "");
     // if the string is odd-length, add a zero to the end for full bytes
-    stripped = stripped.length % 2 == 0 ? stripped : stripped + "";
+    stripped = stripped.length % 2 == 0 ? stripped : stripped + "0";
     const bytes = ethers.toBeArray(stripped);
     return ethers.toUtf8String(bytes);
 }
