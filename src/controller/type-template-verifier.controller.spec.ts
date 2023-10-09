@@ -36,7 +36,7 @@ describe("AppController", () => {
             const actualMic = await appController.mic({
                 ...exampleData.requestNoMic,
             });
-            expect(actualMic).toStrictEqual(exampleData.messageIntegrityCode);
+            expect(actualMic.messageIntegrityCode).toStrictEqual(exampleData.messageIntegrityCode);
         });
         it("should prepare request", async () => {
             const actualRequest = await appController.prepareRequest(exampleData.requestNoMic);
