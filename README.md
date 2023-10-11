@@ -32,6 +32,7 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
+With the above provided `.env` config file the web server with Swagger can be tested at `http://localhost:4500/api`. Use the `Authorize` button on Swagger interface to provide one of the API keys for authentication.
 ## Test
 
 ```bash
@@ -44,6 +45,7 @@ $ yarn test:e2e
 # test coverage
 $ yarn test:cov
 ```
+
 ## Adding support for attestation type
 
 To add a new attestation type use the State Connector Utils CLI from [State Connector Protocol](https://gitlab.com/flarenetwork/state-connector-protocol/) repo. The procedure is as follows:
@@ -54,6 +56,8 @@ To add a new attestation type use the State Connector Utils CLI from [State Conn
 yarn generate verifier-template-refresh -t Payment
 ```
 Consult the documentation for use of the [State Connector Utils](https://gitlab.com/flarenetwork/state-connector-protocol/) CLI for details.
+
+
 ## License
 
 This template is under [MIT licensed](LICENSE).

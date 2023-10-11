@@ -241,3 +241,17 @@ export function readAttestationTypeConfigs(configsPath = DEFAULT_ATTESTATION_TYP
     });
     return typeRecMap;
 }
+
+/**
+ * Helper function serializing bigints to strings recursively.
+ * @param obj
+ * @returns
+ */
+export function serializeBigInts(obj: any) {
+    return JSON.parse(
+        JSON.stringify(
+            obj,
+            (key, value) => (typeof value === "bigint" ? value.toString() : value), // return everything else unchanged
+        ),
+    );
+}
