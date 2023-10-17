@@ -157,21 +157,21 @@ export class TypeTemplate_RequestSubstruct2 {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateStructField!: string;
+    templateStructField: string;
 
     /**
      * example int256 array field with explanation
      */
     @Validate(IsUnsignedIntLike, { each: true })
     @ApiProperty({ description: `example int256 array field with explanation`, example: ["123"] })
-    intArrayField!: string[];
+    intArrayField: string[];
 
     /**
      * example bool array field with explanation*
      */
     @IsBoolean({ each: true })
     @ApiProperty({ description: `example bool array field with explanation*`, example: [true] })
-    boolArrayField!: boolean[];
+    boolArrayField: boolean[];
 }
 export class TypeTemplate_RequestSubstruct1 {
     constructor(params: Required<TypeTemplate_RequestSubstruct1>) {
@@ -183,21 +183,21 @@ export class TypeTemplate_RequestSubstruct1 {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateStructField!: string;
+    templateStructField: string;
 
     /**
      * example uint256 array field with explanation
      */
     @Validate(IsUnsignedIntLike, { each: true })
     @ApiProperty({ description: `example uint256 array field with explanation`, example: ["123"] })
-    uintArrayField!: string[];
+    uintArrayField: string[];
 
     /**
      * example bool array field with explanation*
      */
     @IsBoolean({ each: true })
     @ApiProperty({ description: `example bool array field with explanation*`, example: [true] })
-    boolArrayField!: boolean[];
+    boolArrayField: boolean[];
 }
 export class TypeTemplate_ResponseSubstruct1 {
     constructor(params: Required<TypeTemplate_ResponseSubstruct1>) {
@@ -209,7 +209,7 @@ export class TypeTemplate_ResponseSubstruct1 {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `description*`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateStructField!: string;
+    templateStructField: string;
 }
 export class TypeTemplate_ResponseBody {
     constructor(params: Required<TypeTemplate_ResponseBody>) {
@@ -221,7 +221,7 @@ export class TypeTemplate_ResponseBody {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    templateResponseField!: string;
+    templateResponseField: string;
 
     /**
      * example ResponseSubstruct1 array field with explanation*
@@ -231,7 +231,7 @@ export class TypeTemplate_ResponseBody {
     @IsDefined({ each: true })
     @IsObject({ each: true })
     @ApiProperty({ description: `example ResponseSubstruct1 array field with explanation*` })
-    responseSubstruct1Array!: TypeTemplate_ResponseSubstruct1[];
+    responseSubstruct1Array: TypeTemplate_ResponseSubstruct1[];
 }
 export class TypeTemplate_RequestBody {
     constructor(params: Required<TypeTemplate_RequestBody>) {
@@ -243,14 +243,14 @@ export class TypeTemplate_RequestBody {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `example bytes32 field with explanation`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    bytes32Field!: string;
+    bytes32Field: string;
 
     /**
      * example bool field field with explanation
      */
     @IsBoolean()
     @ApiProperty({ description: `example bool field field with explanation`, example: true })
-    boolField!: boolean;
+    boolField: boolean;
 
     /**
      * example RequestSubstruct1 field with explanation
@@ -261,7 +261,7 @@ export class TypeTemplate_RequestBody {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `example RequestSubstruct1 field with explanation` })
-    requestSubstruct1!: TypeTemplate_RequestSubstruct1;
+    requestSubstruct1: TypeTemplate_RequestSubstruct1;
 
     /**
      * example RequestSubstruct2 array field with explanation*
@@ -271,7 +271,7 @@ export class TypeTemplate_RequestBody {
     @IsDefined({ each: true })
     @IsObject({ each: true })
     @ApiProperty({ description: `example RequestSubstruct2 array field with explanation*` })
-    requestSubstruct2Array!: TypeTemplate_RequestSubstruct2[];
+    requestSubstruct2Array: TypeTemplate_RequestSubstruct2[];
 }
 export class TypeTemplate_Request {
     constructor(params: Required<TypeTemplate_Request>) {
@@ -283,14 +283,14 @@ export class TypeTemplate_Request {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `Id of the attestation type.`, example: "0x5479706554656d706c6174650000000000000000000000000000000000000000" })
-    attestationType!: string;
+    attestationType: string;
 
     /**
      * Id of the data source.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Id of the data source.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    sourceId!: string;
+    @ApiProperty({ description: `Id of the data source.`, example: "0x4254430000000000000000000000000000000000000000000000000000000000" })
+    sourceId: string;
 
     /**
      * `MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).
@@ -300,7 +300,7 @@ export class TypeTemplate_Request {
         description: `'MessageIntegrityCode' that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).`,
         example: "0x0000000000000000000000000000000000000000000000000000000000000000",
     })
-    messageIntegrityCode!: string;
+    messageIntegrityCode: string;
 
     /**
      * Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.
@@ -311,7 +311,7 @@ export class TypeTemplate_Request {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Data defining the request. Type (struct) and interpretation is determined by the 'attestationType'.` })
-    requestBody!: TypeTemplate_RequestBody;
+    requestBody: TypeTemplate_RequestBody;
 }
 export class TypeTemplate_Response {
     constructor(params: Required<TypeTemplate_Response>) {
@@ -323,28 +323,28 @@ export class TypeTemplate_Response {
      */
     @Validate(IsHash32)
     @ApiProperty({ description: `Extracted from the request.`, example: "0x5479706554656d706c6174650000000000000000000000000000000000000000" })
-    attestationType!: string;
+    attestationType: string;
 
     /**
      * Extracted from the request.
      */
     @Validate(IsHash32)
-    @ApiProperty({ description: `Extracted from the request.`, example: "0x0000000000000000000000000000000000000000000000000000000000000000" })
-    sourceId!: string;
+    @ApiProperty({ description: `Extracted from the request.`, example: "0x4254430000000000000000000000000000000000000000000000000000000000" })
+    sourceId: string;
 
     /**
      * The id of the state connector round in which the request was considered.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The id of the state connector round in which the request was considered.`, example: "123" })
-    votingRound!: string;
+    votingRound: string;
 
     /**
      * The lowest timestamp used to generate the response.
      */
     @Validate(IsUnsignedIntLike)
     @ApiProperty({ description: `The lowest timestamp used to generate the response.`, example: "123" })
-    lowestUsedTimestamp!: string;
+    lowestUsedTimestamp: string;
 
     /**
      * Extracted from the request.
@@ -355,7 +355,7 @@ export class TypeTemplate_Response {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Extracted from the request.` })
-    requestBody!: TypeTemplate_RequestBody;
+    requestBody: TypeTemplate_RequestBody;
 
     /**
      * Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.
@@ -368,7 +368,7 @@ export class TypeTemplate_Response {
     @ApiProperty({
         description: `Data defining the response. The verification rules for the construction of the response body and the type are defined per specific 'attestationType'.`,
     })
-    responseBody!: TypeTemplate_ResponseBody;
+    responseBody: TypeTemplate_ResponseBody;
 }
 export class TypeTemplate_Proof {
     constructor(params: Required<TypeTemplate_Proof>) {
@@ -383,7 +383,7 @@ export class TypeTemplate_Proof {
         description: `Merkle proof corresponding to the attestation response.`,
         example: ["0x0000000000000000000000000000000000000000000000000000000000000000"],
     })
-    merkleProof!: string[];
+    merkleProof: string[];
 
     /**
      * Attestation response.
@@ -394,7 +394,7 @@ export class TypeTemplate_Proof {
     @IsNotEmptyObject()
     @IsObject()
     @ApiProperty({ description: `Attestation response.` })
-    data!: TypeTemplate_Response;
+    data: TypeTemplate_Response;
 }
 
 export class TypeTemplate_RequestNoMic extends OmitType<TypeTemplate_Request, "messageIntegrityCode">(TypeTemplate_Request, [

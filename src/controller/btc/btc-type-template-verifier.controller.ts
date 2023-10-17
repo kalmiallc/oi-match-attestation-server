@@ -4,18 +4,18 @@
 
 import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
-import { ApiKeyAuthGuard } from "../auth/apikey.guard";
+import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 
-import { TypeTemplateVerifierService } from "../service/type-template-verifier.service";
-import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../dto/TypeTemplate.dto";
-import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../dto/generic.dto";
+import { BTCTypeTemplateVerifierService } from "../../service/btc/btc-type-template-verifier.service";
+import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../../dto/TypeTemplate.dto";
+import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../../dto/generic.dto";
 
 @ApiTags("TypeTemplate")
-@Controller("TypeTemplate")
+@Controller("BTC/TypeTemplate")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
-export class TypeTemplateVerifierController {
-    constructor(private readonly verifierService: TypeTemplateVerifierService) {}
+export class BTCTypeTemplateVerifierController {
+    constructor(private readonly verifierService: BTCTypeTemplateVerifierService) {}
 
     /**
      *

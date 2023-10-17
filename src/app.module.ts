@@ -4,8 +4,8 @@ import { ApiKeyStrategy } from "./auth/apikey.strategy";
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import configuration from "./config/configuration";
-import { TypeTemplateVerifierController } from "./controller/type-template-verifier.controller";
-import { TypeTemplateVerifierService } from "./service/type-template-verifier.service";
+import { BTCTypeTemplateVerifierController } from "./controller/btc/btc-type-template-verifier.controller";
+import { BTCTypeTemplateVerifierService } from "./service/btc/btc-type-template-verifier.service";
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import { TypeTemplateVerifierService } from "./service/type-template-verifier.se
         }),
         AuthModule,
     ],
-    controllers: [TypeTemplateVerifierController],
-    providers: [ApiKeyStrategy, AuthService, TypeTemplateVerifierService],
+    controllers: [BTCTypeTemplateVerifierController],
+    providers: [ApiKeyStrategy, AuthService, BTCTypeTemplateVerifierService],
 })
 export class AppModule {}

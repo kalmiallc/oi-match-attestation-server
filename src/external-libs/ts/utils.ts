@@ -13,9 +13,10 @@ export interface ABIFragment {
     type: string;
 }
 
-export const DEFAULT_ATTESTATION_TYPE_CONFIGS_PATH = "generated/configs/abi";
+export const DEFAULT_ATTESTATION_TYPE_CONFIGS_PATH = "generated/configs";
 export const MIC_SALT = "Flare";
-export const ZERO_BYTES_32 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+export const ZERO_BYTES_32 = ethers.zeroPadBytes("0x", 32);
+export const ZERO_BYTES_20 = ethers.zeroPadBytes("0x", 20);
 
 /**
  * Compares values of Solidity elementary types when represented in JSON.
@@ -82,7 +83,7 @@ export function isSupportedBasicSolidityType(type: string): boolean {
 }
 
 /**
- * Encodes attestation type name as a 32-byte hex string.
+ * Encodes attestation type name or source id as a 32-byte hex string.
  * It takes the UTF-8 bytes of the name and pads them with zeros to 32 bytes.
  * @param attestationTypeName
  * @returns '0x'-prefixed hex string representing 32-bytes
@@ -102,7 +103,7 @@ export function encodeAttestationName(attestationTypeName: string) {
 }
 
 /**
- * Decodes attestation type name from a 32-byte hex string.
+ * Decodes attestation type name or source id from a 32-byte hex string.
  * @param encoded Should be a '0x'-prefixed hex string representing exactly 32-bytes.
  * @returns
  */
@@ -123,7 +124,7 @@ export function decodeAttestationName(encoded: string) {
  * it creates a possibly nested Javascript object compatible with the ABI definitions.
  * The function assumes that the decoded objects matches the ABI. If this is not the case,
  * function may behave in strange ways.
- * This is auxilary function not intended to be used directly.
+ * This is auxiliary function not intended to be used directly.
  * @param decoded
  * @param abi
  * @param ignoreArray parameter for recursion call when handling of arrays are needed.
@@ -162,7 +163,7 @@ export function remapABIParsedToObjects(decoded: any, abi: ABIFragment, ignoreAr
 }
 
 /**
- * Checks wheter the struct objects are deep equal. Objects should match the ABI definition.
+ * Checks whether the struct objects are deep equal. Objects should match the ABI definition.
  * @param struct1
  * @param struct2
  * @param abi
