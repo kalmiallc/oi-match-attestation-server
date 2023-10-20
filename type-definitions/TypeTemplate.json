@@ -1,8 +1,10 @@
 {
   "name": "TypeTemplate",
-  "fullComment": " @custom:name TypeTemplate\n @custom:id 0x00\n @custom:supported <supported sources>\n @author <author of the type>\n @notice <description of the type>\n @custom:verification <general verification rules>\n @custom:lut <lowestUsedTimestamp>",
+  "fullComment": " @custom:name TypeTemplate\n @custom:id 0x00\n @custom:supported BTC\n @author <author of the type>\n @notice <description of the type>\n @custom:verification <general verification rules>\n @custom:lut <lowestUsedTimestamp>",
   "description": "<description of the type>",
-  "supported": "<supported sources>",
+  "supported": [
+    "BTC"
+  ],
   "verification": "<general verification rules>",
   "lut": "<lowestUsedTimestamp>",
   "proof": {
