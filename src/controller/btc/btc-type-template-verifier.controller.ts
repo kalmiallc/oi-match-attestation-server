@@ -7,8 +7,8 @@ import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 
 import { BTCTypeTemplateVerifierService } from "../../service/btc/btc-type-template-verifier.service";
-import { TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../../dto/TypeTemplate.dto";
-import { AttestationResponseDTO, EncodedRequestBody, MicResponse } from "../../dto/generic.dto";
+import { AttestationResponseDTO_TypeTemplate_Response, TypeTemplate_RequestNoMic } from "../../dto/TypeTemplate.dto";
+import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
 
 @ApiTags("TypeTemplate")
 @Controller("BTC/TypeTemplate")
@@ -25,7 +25,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequestBody): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    async verify(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_TypeTemplate_Response> {
         return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
     }
 
@@ -36,7 +36,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareResponse")
-    async prepareResponse(@Body() body: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    async prepareResponse(@Body() body: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO_TypeTemplate_Response> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -47,9 +47,7 @@ export class BTCTypeTemplateVerifierController {
     @HttpCode(200)
     @Post("mic")
     async mic(@Body() body: TypeTemplate_RequestNoMic): Promise<MicResponse> {
-        return {
-            messageIntegrityCode: await this.verifierService.mic(body),
-        } as MicResponse;
+        return this.verifierService.mic(body);
     }
 
     /**
@@ -59,9 +57,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareRequest")
-    async prepareRequest(@Body() body: TypeTemplate_RequestNoMic): Promise<EncodedRequestBody> {
-        return {
-            abiEncodedRequest: await this.verifierService.prepareRequest(body),
-        } as EncodedRequestBody;
+    async prepareRequest(@Body() body: TypeTemplate_RequestNoMic): Promise<EncodedRequestResponse> {
+        return this.verifierService.prepareRequest(body);
     }
 }

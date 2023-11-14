@@ -1,9 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
-import { AttestationResponseDTO } from "../../dto/generic.dto";
-import { TypeTemplate_Request, TypeTemplate_RequestNoMic, TypeTemplate_Response } from "../../dto/TypeTemplate.dto";
+import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
+import {
+    AttestationResponseDTO_TypeTemplate_Response,
+    TypeTemplate_Request,
+    TypeTemplate_RequestNoMic,
+    TypeTemplate_Response,
+} from "../../dto/TypeTemplate.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
-import { AttestationResponse, AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
+import { AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
 import { MIC_SALT, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
 
@@ -22,7 +27,7 @@ export class BTCTypeTemplateVerifierService {
     }
 
     // Implement the verifyRequest method returning attestation response
-    async verifyRequest(request: TypeTemplate_Request | TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    async verifyRequest(request: TypeTemplate_Request | TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO_TypeTemplate_Response> {
         if (request.attestationType !== encodeAttestationName("TypeTemplate") || request.sourceId !== encodeAttestationName("BTC")) {
             throw new HttpException(
                 {
@@ -37,7 +42,7 @@ export class BTCTypeTemplateVerifierService {
         console.dir(request, { depth: null });
 
         // Example response - return your own response instead
-        const response: AttestationResponse<TypeTemplate_Response> = serializeBigInts({
+        const response: AttestationResponseDTO_TypeTemplate_Response = serializeBigInts({
             status: AttestationResponseStatus.VALID,
             response: {
                 ...this.exampleData.response,
@@ -52,7 +57,7 @@ export class BTCTypeTemplateVerifierService {
 
     //-$$$<end-constructor> End of custom code section. Do not change this comment.
 
-    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    public async verifyEncodedRequest(abiEncodedRequest: string): Promise<AttestationResponseDTO_TypeTemplate_Response> {
         const requestJSON = this.store.parseRequest<TypeTemplate_Request>(abiEncodedRequest);
         //-$$$<start-verifyEncodedRequest> Start of custom code section. Do not change this comment.
 
@@ -63,7 +68,7 @@ export class BTCTypeTemplateVerifierService {
         return response;
     }
 
-    public async prepareResponse(request: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO<TypeTemplate_Response>> {
+    public async prepareResponse(request: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO_TypeTemplate_Response> {
         //-$$$<start-prepareResponse> Start of custom code section. Do not change this comment.
 
         const response = await this.verifyRequest(request);
@@ -73,32 +78,44 @@ export class BTCTypeTemplateVerifierService {
         return response;
     }
 
-    public async mic(request: TypeTemplate_RequestNoMic): Promise<string | undefined> {
+    public async mic(request: TypeTemplate_RequestNoMic): Promise<MicResponse> {
         //-$$$<start-mic> Start of custom code section. Do not change this comment.
 
         const result = await this.verifyRequest(request);
+        if (result.status !== AttestationResponseStatus.VALID) {
+            return new MicResponse({ status: result.status });
+        }
         const response = result.response;
 
         //-$$$<end-mic> End of custom code section. Do not change this comment.
 
-        if (!response) return undefined;
-        return this.store.attestationResponseHash<TypeTemplate_Response>(response, MIC_SALT)!;
+        if (!response) return new MicResponse({ status: result.status });
+        return new MicResponse({
+            status: AttestationResponseStatus.VALID,
+            messageIntegrityCode: this.store.attestationResponseHash<TypeTemplate_Response>(response, MIC_SALT),
+        });
     }
 
-    public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<string | undefined> {
+    public async prepareRequest(request: TypeTemplate_RequestNoMic): Promise<EncodedRequestResponse> {
         //-$$$<start-prepareRequest> Start of custom code section. Do not change this comment.
 
         const result = await this.verifyRequest(request);
+        if (result.status !== AttestationResponseStatus.VALID) {
+            return new EncodedRequestResponse({ status: result.status });
+        }
         const response = result.response;
 
         //-$$$<end-prepareRequest> End of custom code section. Do not change this comment.
 
-        if (!response) return undefined;
+        if (!response) return new EncodedRequestResponse({ status: result.status });
         const newRequest = {
             ...request,
             messageIntegrityCode: this.store.attestationResponseHash<TypeTemplate_Response>(response, MIC_SALT)!,
         } as TypeTemplate_Request;
 
-        return this.store.encodeRequest(newRequest);
+        return new EncodedRequestResponse({
+            status: AttestationResponseStatus.VALID,
+            abiEncodedRequest: this.store.encodeRequest(newRequest),
+        });
     }
 }

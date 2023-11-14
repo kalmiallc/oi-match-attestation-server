@@ -147,6 +147,38 @@ class IsEVMAddress implements ValidatorConstraintInterface {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// DTOs /////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Attestation status
+ */
+export enum AttestationResponseStatus {
+    /**
+     * Attestation request is valid.
+     */
+    VALID = "VALID",
+    /**
+     * Attestation request is invalid.
+     */
+    INVALID = "INVALID",
+    /**
+     * Attestation request cannot be confirmed neither rejected by the verifier at the moment.
+     */
+    INDETERMINATE = "INDETERMINATE",
+}
+
+/**
+ * Attestation response for specific attestation type (flattened)
+ */
+export class AttestationResponseDTO_TypeTemplate_Response {
+    constructor(params: Required<AttestationResponseDTO_TypeTemplate_Response>) {
+        Object.assign(this, params);
+    }
+
+    status: AttestationResponseStatus;
+
+    response?: TypeTemplate_Response;
+}
+
 export class TypeTemplate_RequestSubstruct2 {
     constructor(params: Required<TypeTemplate_RequestSubstruct2>) {
         Object.assign(this, params);

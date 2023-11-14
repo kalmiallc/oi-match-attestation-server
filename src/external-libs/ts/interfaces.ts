@@ -31,11 +31,3 @@ export interface ExampleData<RNM, REQ, RES> {
     encodedRequestZeroMic: string;
     encodedRequest: string;
 }
-
-/**
- * Interface for data source definition
- */
-export interface DataSource {
-    name: string;
-    description: string;
-}
