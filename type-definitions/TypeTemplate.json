@@ -5,7 +5,7 @@
   "supported": [
     "BTC"
   ],
-  "verification": "<general verification rules>",
+  "verification": "<general verification rules>\n ",
   "lut": "<lowestUsedTimestamp>",
   "proof": {
     "name": "Proof",
@@ -33,25 +33,25 @@
     "description": "Toplevel request",
     "above": "",
     "below": "",
-    "fullComment": " @notice Toplevel request\n @param attestationType Id of the attestation type.\n @param sourceId Id of the data source.\n @param messageIntegrityCode `MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code).\n @param requestBody Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.",
+    "fullComment": " @notice Toplevel request\n @param attestationType ID of the attestation type.\n @param sourceId ID of the data source.\n @param messageIntegrityCode `MessageIntegrityCode` that is derived from the expected response.\n @param requestBody Data defining the request. Type (struct) and interpretation is determined by the `attestationType`.",
     "params": [
       {
         "name": "attestationType",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "Id of the attestation type."
+        "comment": "ID of the attestation type."
       },
       {
         "name": "sourceId",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "Id of the data source."
+        "comment": "ID of the data source."
       },
       {
         "name": "messageIntegrityCode",
         "type": "bytes32",
         "typeSimple": "bytes32",
-        "comment": "`MessageIntegrityCode` that is derived from the expected response as defined [here](/specs/attestations/hash-MIC.md#message-integrity-code)."
+        "comment": "`MessageIntegrityCode` that is derived from the expected response."
       },
       {
         "name": "requestBody",
@@ -66,7 +66,7 @@
     "description": "Toplevel response",
     "above": "",
     "below": "",
-    "fullComment": " @notice Toplevel response\n @param attestationType Extracted from the request.\n @param sourceId Extracted from the request.\n @param votingRound The id of the state connector round in which the request was considered.\n @param lowestUsedTimestamp The lowest timestamp used to generate the response.\n @param requestBody Extracted from the request.\n @param responseBody Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.",
+    "fullComment": " @notice Toplevel response\n @param attestationType Extracted from the request.\n @param sourceId Extracted from the request.\n @param votingRound The ID of the State Connector round in which the request was considered.\n @param lowestUsedTimestamp The lowest timestamp used to generate the response.\n @param requestBody Extracted from the request.\n @param responseBody Data defining the response. The verification rules for the construction of the response body and the type are defined per specific `attestationType`.",
     "params": [
       {
         "name": "attestationType",
@@ -84,7 +84,7 @@
         "name": "votingRound",
         "type": "uint64",
         "typeSimple": "uint64",
-        "comment": "The id of the state connector round in which the request was considered."
+        "comment": "The ID of the State Connector round in which the request was considered."
       },
       {
         "name": "lowestUsedTimestamp",
