@@ -11,7 +11,7 @@ import { AttestationResponseDTO_TypeTemplate_Response, TypeTemplate_RequestNoMic
 import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
 
 @ApiTags("TypeTemplate")
-@Controller("BTC/TypeTemplate")
+@Controller("btc/TypeTemplate")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
 export class BTCTypeTemplateVerifierController {
