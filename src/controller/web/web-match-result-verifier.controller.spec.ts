@@ -1,22 +1,22 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { BTCTypeTemplateVerifierService } from "../../service/btc/btc-type-template-verifier.service";
-import { BTCTypeTemplateVerifierController } from "./btc-type-template-verifier.controller";
+import { WEBMatchResultVerifierService } from "../../service/web/web-match-result-verifier.service";
+import { WEBMatchResultVerifierController } from "./web-match-result-verifier.controller";
 import { readFileSync } from "fs";
 import { ExampleData } from "../../external-libs/ts/interfaces";
-import { TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response } from "../../dto/TypeTemplate.dto";
+import { MatchResult_RequestNoMic, MatchResult_Request, MatchResult_Response } from "../../dto/MatchResult.dto";
 
 describe("AppController", () => {
-    let appController: BTCTypeTemplateVerifierController;
-    let exampleData: ExampleData<TypeTemplate_RequestNoMic, TypeTemplate_Request, TypeTemplate_Response>;
+    let appController: WEBMatchResultVerifierController;
+    let exampleData: ExampleData<MatchResult_RequestNoMic, MatchResult_Request, MatchResult_Response>;
 
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
-            controllers: [BTCTypeTemplateVerifierController],
-            providers: [BTCTypeTemplateVerifierService],
+            controllers: [WEBMatchResultVerifierController],
+            providers: [WEBMatchResultVerifierService],
         }).compile();
 
-        appController = app.get<BTCTypeTemplateVerifierController>(BTCTypeTemplateVerifierController);
-        exampleData = JSON.parse(readFileSync("src/example-data/TypeTemplate.json", "utf8"));
+        appController = app.get<WEBMatchResultVerifierController>(WEBMatchResultVerifierController);
+        exampleData = JSON.parse(readFileSync("src/example-data/MatchResult.json", "utf8"));
     });
 
     describe("root", () => {

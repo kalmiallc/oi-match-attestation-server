@@ -6,16 +6,16 @@ import { Body, Controller, HttpCode, Post, UseGuards } from "@nestjs/common";
 import { ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { ApiKeyAuthGuard } from "../../auth/apikey.guard";
 
-import { BTCTypeTemplateVerifierService } from "../../service/btc/btc-type-template-verifier.service";
-import { AttestationResponseDTO_TypeTemplate_Response, TypeTemplate_RequestNoMic } from "../../dto/TypeTemplate.dto";
+import { WEBMatchResultVerifierService } from "../../service/web/web-match-result-verifier.service";
+import { AttestationResponseDTO_MatchResult_Response, MatchResult_RequestNoMic } from "../../dto/MatchResult.dto";
 import { EncodedRequest, MicResponse, EncodedRequestResponse } from "../../dto/generic.dto";
 
-@ApiTags("TypeTemplate")
-@Controller("btc/TypeTemplate")
+@ApiTags("MatchResult")
+@Controller("MatchResult")
 @UseGuards(ApiKeyAuthGuard)
 @ApiSecurity("X-API-KEY")
-export class BTCTypeTemplateVerifierController {
-    constructor(private readonly verifierService: BTCTypeTemplateVerifierService) {}
+export class WEBMatchResultVerifierController {
+    constructor(private readonly verifierService: WEBMatchResultVerifierService) {}
 
     /**
      *
@@ -25,7 +25,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post()
-    async verify(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_TypeTemplate_Response> {
+    async verify(@Body() body: EncodedRequest): Promise<AttestationResponseDTO_MatchResult_Response> {
         return this.verifierService.verifyEncodedRequest(body.abiEncodedRequest!);
     }
 
@@ -36,7 +36,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareResponse")
-    async prepareResponse(@Body() body: TypeTemplate_RequestNoMic): Promise<AttestationResponseDTO_TypeTemplate_Response> {
+    async prepareResponse(@Body() body: MatchResult_RequestNoMic): Promise<AttestationResponseDTO_MatchResult_Response> {
         return this.verifierService.prepareResponse(body);
     }
 
@@ -46,7 +46,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("mic")
-    async mic(@Body() body: TypeTemplate_RequestNoMic): Promise<MicResponse> {
+    async mic(@Body() body: MatchResult_RequestNoMic): Promise<MicResponse> {
         return this.verifierService.mic(body);
     }
 
@@ -57,7 +57,7 @@ export class BTCTypeTemplateVerifierController {
      */
     @HttpCode(200)
     @Post("prepareRequest")
-    async prepareRequest(@Body() body: TypeTemplate_RequestNoMic): Promise<EncodedRequestResponse> {
+    async prepareRequest(@Body() body: MatchResult_RequestNoMic): Promise<EncodedRequestResponse> {
         return this.verifierService.prepareRequest(body);
     }
 }
