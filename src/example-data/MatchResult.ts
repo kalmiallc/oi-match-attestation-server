@@ -1,7 +1,15 @@
-import { MatchResult_Proof, MatchResult_RequestBody, MatchResult_RequestNoMic, MatchResult_Response, MatchResult_ResponseBody } from "../dto/MatchResult.dto";
+import {
+    MatchResult_Proof,
+    MatchResult_Request,
+    MatchResult_RequestBody,
+    MatchResult_RequestNoMic,
+    MatchResult_Response,
+    MatchResult_ResponseBody,
+} from "../dto/MatchResult.dto";
 import { MIC_SALT, encodeAttestationName } from "../external-libs/ts/utils";
 import { randSol } from "../external-libs/ts/random";
 import { AttestationDefinitionStore } from "../external-libs/ts/AttestationDefinitionStore";
+import { ExampleData } from "../utils";
 
 const ATTESTATION_TYPE_NAME = "MatchResult";
 
@@ -11,7 +19,7 @@ function randomProof(votingRound: number = 1234, sourceId?: string, fullRandom =
         attestationType: encodeAttestationName(ATTESTATION_TYPE_NAME),
         sourceId: encodeAttestationName(sourceId ?? "BTC"),
         votingRound: votingRound.toString(),
-        lowestUsedTimestamp: "1234",
+        lowestUsedTimestamp: "0xffffffffffffffff",
         requestBody: bodies.requestBody,
         responseBody: bodies.responseBody,
     } as MatchResult_Response;
@@ -60,3 +68,5 @@ export function randomExample(votingRound: number = 1234, sourceId?: string, ful
 export function randomMatchResultExample(votingRound: number = 1234, sourceId?: string, fullRandom = false) {
     return randomExample(votingRound, sourceId, fullRandom);
 }
+
+

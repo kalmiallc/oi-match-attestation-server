@@ -188,14 +188,14 @@ export class MatchResult_ResponseBody {
      * Unix timestamp of the exact match beginning
      */
     @Validate(IsUnsignedIntLike)
-    @ApiProperty({ description: `Unix timestamp of the exact match beginning`, example: "123" })
+    @ApiProperty({ description: `Unix timestamp of the exact match beginning`, example: "1721926800" })
     timestamp: string;
 
     /**
      * Possible return values are 0 = no data, 1 = team 1 won, 2 = team 2 won, 3 = draw
      */
     @Validate(IsUnsignedIntLike)
-    @ApiProperty({ description: `Possible return values are 0 = no data, 1 = team 1 won, 2 = team 2 won, 3 = draw`, example: "123" })
+    @ApiProperty({ description: `Possible return values are 0 = no data, 1 = team 1 won, 2 = team 2 won, 3 = draw`, example: "1" })
     result: string;
 }
 export class MatchResult_RequestBody {
@@ -207,7 +207,7 @@ export class MatchResult_RequestBody {
      * date of a match (unix timestamp without hour - rounded down to day)
      */
     @Validate(IsUnsignedIntLike)
-    @ApiProperty({ description: `date of a match (unix timestamp without hour - rounded down to day)`, example: "123" })
+    @ApiProperty({ description: `date of a match (unix timestamp without hour - rounded down to day)`, example: "1721952000" })
     date: string;
 
     /**
@@ -216,7 +216,7 @@ export class MatchResult_RequestBody {
     @Validate(IsUnsignedIntLike)
     @ApiProperty({
         description: `id of a sport from 0 - Basketball, 1 - Basketball3x3, 2 - Badminton, 3 - BeachVolley, 4 - FieldHockey, 5 - Football, 6 - Handball, 7 - TableTennis, 8 - Tennis, 9 - Volleyball, 10 - WaterPolo`,
-        example: "123",
+        example: "0",
     })
     sport: string;
 
@@ -224,13 +224,13 @@ export class MatchResult_RequestBody {
      * 0 - male, 1 - female
      */
     @Validate(IsUnsignedIntLike)
-    @ApiProperty({ description: `0 - male, 1 - female`, example: "123" })
+    @ApiProperty({ description: `0 - male, 1 - female`, example: "0" })
     gender: string;
 
     /**
      * teams playing the game, divided with comma (example: England,Slovenia)
      */
-    @ApiProperty({ description: `teams playing the game, divided with comma (example: England,Slovenia)`, example: "Example string" })
+    @ApiProperty({ description: `teams playing the game, divided with comma (example: England;Slovenia)`, example: "England,Slovenia" })
     teams: string;
 }
 export class MatchResult_Request {

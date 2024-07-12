@@ -1,7 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
 import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
-import { AttestationResponseDTO_MatchResult_Response, MatchResult_Request, MatchResult_RequestNoMic, MatchResult_Response } from "../../dto/MatchResult.dto";
+import {
+    AttestationResponseDTO_MatchResult_Response,
+    MatchResult_Request,
+    MatchResult_RequestBody,
+    MatchResult_RequestNoMic,
+    MatchResult_Response,
+    MatchResult_ResponseBody,
+} from "../../dto/MatchResult.dto";
 import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDefinitionStore";
 import { AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
@@ -51,14 +58,31 @@ export class WEBMatchResultVerifierService {
     async verifyRequest(fixedRequest: MatchResult_Request): Promise<AttestationResponseDTO_MatchResult_Response> {
         //-$$$<start-verifyRequest> Start of custom code section. Do not change this comment.
 
+        let responseBody: MatchResult_ResponseBody | undefined;
+        let status = AttestationResponseStatus.INVALID;
+
+        try {
+            responseBody = await prepareResponseBody(fixedRequest.requestBody);
+            if (responseBody.result !== "0" && ["1", "2", "3"].includes(responseBody.result)) {
+                status = AttestationResponseStatus.VALID;
+            } 
+            const startOfDay = Math.floor(Number(responseBody.timestamp) - (Number(responseBody.timestamp) % 86400));
+            if (fixedRequest.requestBody.date !== startOfDay.toString()) {
+                status = AttestationResponseStatus.INVALID;
+            }
+        } catch (ex) {
+            console.error("Error validating request", ex);
+        }
+
         return {
-            status: AttestationResponseStatus.VALID,
+            status,
             response: {
-                ...this.exampleData.response,
+                responseBody,
                 attestationType: fixedRequest.attestationType,
+                votingRound: "123", // TODO: Handle this
                 sourceId: fixedRequest.sourceId,
                 requestBody: serializeBigInts(fixedRequest.requestBody),
-                lowestUsedTimestamp: "0xffffffffffffffff",
+                lowestUsedTimestamp: "0xffffffffffffffff", //TODO: Check this
             } as MatchResult_Response,
         };
 
@@ -107,4 +131,36 @@ export class WEBMatchResultVerifierService {
             abiEncodedRequest: this.store.encodeRequest(newRequest),
         });
     }
+}
+
+/**
+ * Gets the match result from the API. Each verifier should implement its own function to get the results from the API.
+ * 
+ *
+ * @param requestBody Body of the request
+ * @returns  Body of the response
+ */
+
+async function prepareResponseBody(requestBody: MatchResult_RequestBody): Promise<MatchResult_ResponseBody> {
+    // Example api call. Fetch using the node.fetch
+    // example query: https://oi-flare-proxy-api.vercel.app/events?date=2024-07-25&teams=Canada,New%20Zealand&genderByIndex=1&sportByIndex=5
+    // example response: {"timestamp": 1234567890, "result": 1}
+    const EP = process.env?.API_ENDPOINT || "https://oi-flare-proxy-api.vercel.app";
+    const date = new Date(Number(requestBody.date) * 1000);
+    const formattedDate = date.toISOString().split("T")[0];
+    const response = await fetch(
+        `${EP}/events?date=${formattedDate}&teams=${requestBody.teams}&genderByIndex=${requestBody.gender}&sportByIndex=${requestBody.sport}`,
+    );
+    const data = await response.json();
+
+    const responseBody = {
+        timestamp: data[0].startTime.toString(),
+        result: data[0].winner?.toString() || 0,
+    } as MatchResult_ResponseBody;
+
+    console.log(
+        `Response from ${EP}/events?date=${formattedDate}&teams=${requestBody.teams}&genderByIndex=${requestBody.gender}&sportByIndex=${requestBody.sport}`,
+        responseBody,
+    );
+    return responseBody;
 }
