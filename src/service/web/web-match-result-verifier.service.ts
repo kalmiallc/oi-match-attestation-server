@@ -79,10 +79,10 @@ export class WEBMatchResultVerifierService {
             response: {
                 responseBody,
                 attestationType: fixedRequest.attestationType,
-                votingRound: "123", // TODO: Handle this
+                votingRound: "0", 
                 sourceId: fixedRequest.sourceId,
                 requestBody: serializeBigInts(fixedRequest.requestBody),
-                lowestUsedTimestamp: "0xffffffffffffffff", //TODO: Check this
+                lowestUsedTimestamp: "0xffffffffffffffff", 
             } as MatchResult_Response,
         };
 

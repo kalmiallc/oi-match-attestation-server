@@ -48,6 +48,17 @@ describe("AppController", () => {
             const actualRequest = await appController.prepareRequest(exampleData.requestNoMic);
             expect(actualRequest.abiEncodedRequest).toStrictEqual(exampleData.encodedRequest);
         });
+
+        it("should 'verify' fail", async () => {
+
+            exampleData = generateSampleRequestResponse("1722364500", "0");
+             const actualRes = await appController.verify({
+                abiEncodedRequest: exampleData.encodedRequestZeroMic,
+            });
+            expect(actualRes.status).toEqual("INVALID");
+        });
+
+
     });
 });
 
@@ -82,7 +93,7 @@ export function generateSampleRequestResponse(timestamp = "1721833200", result= 
     const response = {
         attestationType: encodeAttestationName(ATTESTATION_TYPE_NAME),
         sourceId: encodeAttestationName("WEB"),
-        votingRound: "123",
+        votingRound: "0",
         lowestUsedTimestamp: "0xffffffffffffffff",
         requestBody: requestBody,
         responseBody: responseBody,
