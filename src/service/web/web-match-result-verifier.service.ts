@@ -1,5 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
+import googleIt from "google-it";
+import JSON5 from "json5";
+import moment from "moment";
+import OpenAI from "openai";
 import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
 import {
     AttestationResponseDTO_MatchResult_Response,
@@ -55,38 +59,35 @@ export class WEBMatchResultVerifierService {
         return this.verifyRequest(fixedRequest);
     }
 
-    /* Verifies the match results against the following parameters:
-    *   - date: match date (unix timestamp without hour - rounded down start of the day).
-    *   - sport: match sport (enum Sports).
-    *   - gender: for which gender is the match (0 = male, 1 = female, 2 = mixed).
-    *   - teams: match teams.
-    * 
-    * The response is expected to contain the following parameters:
-    *   - timestamp: Unix timestamp of the exact match beginning
-    *   - result: Possible return values are 1 = team 1 won, 2 = team 2 won, 3 = draw
-    * 
-    * The verification survives if:
-    * - the result is 1, 2 or 3.
-    * - the timestamp it the exact match beginning. This is calculated by rounding the timestamp to the star of the day and comparing it to the request date parameter.
-    * 
-    * 
-    *    enum Sports {
-    *        Basketball,
-    *        Basketball3x3,
-    *        Badminton,
-    *        BeachVolley,
-    *        FieldHockey,
-    *        Football,
-    *        Handball,
-    *        TableTennis,
-    *        Tennis,
-    *        Volleyball,
-    *        WaterPolo
-    *    }
-    * 
-    * 
-    */
-
+    /*
+     * Verifies the match results against the following parameters:
+     *   - date: match date (unix timestamp without hour - rounded down start of the day).
+     *   - sport: match sport (enum Sports).
+     *   - gender: for which gender is the match (0 = male, 1 = female, 2 = mixed).
+     *   - teams: match teams.
+     *
+     * The response is expected to contain the following parameters:
+     *   - timestamp: Unix timestamp of the exact match beginning
+     *   - result: Possible return values are 1 = team 1 won, 2 = team 2 won, 3 = draw
+     *
+     * The verification survives if:
+     * - the result is 1, 2 or 3.
+     * - the timestamp it the exact match beginning. This is calculated by rounding the timestamp to the star of the day and comparing it to the request date parameter.
+     *
+     *    enum Sports {
+     *        Basketball,
+     *        Basketball3x3,
+     *        Badminton,
+     *        BeachVolley,
+     *        FieldHockey,
+     *        Football,
+     *        Handball,
+     *        TableTennis,
+     *        Tennis,
+     *        Volleyball,
+     *        WaterPolo
+     *    }
+     */
     async verifyRequest(fixedRequest: MatchResult_Request): Promise<AttestationResponseDTO_MatchResult_Response> {
         //-$$$<start-verifyRequest> Start of custom code section. Do not change this comment.
 
@@ -96,14 +97,16 @@ export class WEBMatchResultVerifierService {
         try {
             responseBody = await prepareResponseBody(fixedRequest.requestBody);
             if (responseBody.result !== "0" && ["1", "2", "3"].includes(responseBody.result)) {
+                console.log("IS VALID");
                 status = AttestationResponseStatus.VALID;
-            } 
-            const startOfDay = Math.floor(Number(responseBody.timestamp) - (Number(responseBody.timestamp) % 86400));
-            if (fixedRequest.requestBody.date !== startOfDay.toString()) {
+            }
+
+            if (!responseBody.timestamp) {
+                console.log("SET TO INVALID");
                 status = AttestationResponseStatus.INVALID;
             }
-        } catch (ex) {
-            console.error("Error validating request", ex);
+        } catch (error) {
+            console.error("Error validating request: ", error);
         }
 
         return {
@@ -111,10 +114,10 @@ export class WEBMatchResultVerifierService {
             response: {
                 responseBody,
                 attestationType: fixedRequest.attestationType,
-                votingRound: "0", 
+                votingRound: "0",
                 sourceId: fixedRequest.sourceId,
                 requestBody: serializeBigInts(fixedRequest.requestBody),
-                lowestUsedTimestamp: "0xffffffffffffffff", 
+                lowestUsedTimestamp: "0xffffffffffffffff",
             } as MatchResult_Response,
         };
 
@@ -168,31 +171,203 @@ export class WEBMatchResultVerifierService {
 /**
  * Gets the match result from the API. Each verifier should implement its own function to get the results from the API.
  * Data must be transferred in such a way that it complies with the response structure.
- * 
+ *
  * @param requestBody Body of the request
  * @returns  Body of the response
  */
-
 async function prepareResponseBody(requestBody: MatchResult_RequestBody): Promise<MatchResult_ResponseBody> {
-    // Example api call. Fetch using the node.fetch
-    // example query: https://oi-flare-proxy-api.vercel.app/events?date=2024-07-25&teams=Canada,New%20Zealand&genderByIndex=1&sportByIndex=5
-    // example response: {"timestamp": 1234567890, "result": 1}
-    const EP = process.env?.API_ENDPOINT || "https://oi-flare-proxy-api.vercel.app";
-    const date = new Date(Number(requestBody.date) * 1000);
-    const formattedDate = date.toISOString().split("T")[0];
-    const response = await fetch(
-        `${EP}/events?date=${formattedDate}&teams=${requestBody.teams}&genderByIndex=${requestBody.gender}&sportByIndex=${requestBody.sport}`,
-    );
-    const data = await response.json();
+    const results = await getMatchResults(requestBody.teams, requestBody.gender, requestBody.sport, requestBody.date);
 
     const responseBody = {
-        timestamp: data[0].startTime.toString(),
-        result: data[0].winner?.toString() || 0,
+        timestamp: results.ts || "",
+        result: results.winner || "0",
     } as MatchResult_ResponseBody;
 
-    console.log(
-        `Response from ${EP}/events?date=${formattedDate}&teams=${requestBody.teams}&genderByIndex=${requestBody.gender}&sportByIndex=${requestBody.sport}`,
-        responseBody,
-    );
     return responseBody;
+}
+
+/**
+ * Returns match results.
+ * @param teamsString Teams string.
+ * @param genderIndex Gender index.
+ * @param sportIndex Sport index.
+ * @param startTime Match start time.
+ * @returns Match results.
+ */
+async function getMatchResults(
+    teamsString: string,
+    genderIndex: string,
+    sportIndex: string,
+    startTime: string,
+): Promise<{ winner: string | null; ts: string | null }> {
+    const teams = teamsString.split(",");
+    const sport = getSportByIndex(sportIndex);
+    const gender = getGenderByIndex(genderIndex);
+    const choices = [...teams, "DRAW", "NO_RESULT"];
+
+    const date = new Date(Number(startTime) * 1000);
+    const dateString = date.toISOString().split("T")[0];
+
+    const articles = [];
+    try {
+        const options = {};
+
+        const results = await googleIt({
+            options,
+            query: `${teams.join(" vs ")} olympics 2024 ${gender} ${sport} ${moment(dateString).format("DD.MM.YYYY")}`,
+            limit: 10,
+            disableConsole: true,
+        });
+        for (const result of results) {
+            const article = {
+                title: result.title,
+                text: result.snippet,
+            };
+
+            articles.push(article);
+        }
+    } catch (error) {
+        console.log("Error while getting event results: ");
+        console.log(error);
+
+        return { winner: null, ts: null };
+    }
+
+    if (!articles.length) {
+        console.log("No results articles found for the given event.");
+        return { winner: null, ts: null };
+    }
+
+    let results = null;
+    try {
+        const openAiClient = new OpenAI({
+            organization: process.env.OPEN_AI_ORGANIZATION_ID,
+            apiKey: process.env.OPEN_AI_API_KEY,
+        });
+
+        const response = await openAiClient.chat.completions.create(
+            {
+                model: "gpt-4o",
+                temperature: 0,
+                response_format: {
+                    type: "json_object",
+                },
+                messages: [
+                    {
+                        role: "system",
+                        content: `CURRENT SYSTEM DATE AND TIME (YYYY-MM-DD HH:mm:ss): "${moment().format("YYYY-MM-DD HH:mm:ss")}`,
+                    },
+                    {
+                        role: "user",
+                        content: `From the following news articles obtain who won the match (${teams.join(
+                            " vs ",
+                        )}). Return one of the following values: ${choices
+                            .map((c) => `"${c}"`)
+                            .join(
+                                ", ",
+                            )}. Return "NO_RESULTS" if the actual result of the match cannot be determined or if the result is ambiguous. Result should be in the RFC8259 compliant JSON response following this format without deviation: { "result": "sport event result value from the list of possible values", "teamResult1": "score/points of the first listed team", "teamResult2": "score/points of the second listed team" }. Articles: ${JSON.stringify(
+                            articles,
+                        )}`,
+                    },
+                ],
+            },
+            {
+                timeout: 60 * 1000, // 1 minute.
+                maxRetries: 3,
+            },
+        );
+
+        results = JSON5.parse(response?.choices[0]?.message?.content || "");
+    } catch (error) {
+        console.log("Error while parsing results from Open AI: ");
+        console.log(error);
+
+        return { winner: null, ts: null };
+    }
+
+    if (!results || !results?.result) {
+        console.log("No results obtained from Open AI.");
+
+        return { winner: null, ts: null };
+    }
+
+    const winner = parseWinner(results.result, teams);
+    const ts = createTimestamp(Number(startTime), results.teamResult1, results.teamResult2);
+
+    return { winner, ts };
+}
+
+/**
+ * Parses winner from obtained results.
+ * @param result Obtained results.
+ * @param teams Event teams.
+ * @returns Winner index.
+ */
+function parseWinner(result: string, teams: string[]): string | null {
+    if (result === teams[0]) {
+        return "1";
+    }
+
+    if (result === teams[1]) {
+        return "2";
+    }
+
+    if (result === "DRAW") {
+        return "3";
+    }
+
+    return null;
+}
+
+/**
+ * Get sport string by sport index.
+ * @param sportIndex Sport index.
+ * @returns Sport string.
+ */
+function getSportByIndex(sportIndex: string): string | null {
+    const sports: { [key: string]: string } = {
+        "0": "Basketball",
+        "1": "Basketball 3x3",
+        "2": "Badminton",
+        "3": "Beach Volley",
+        "4": "Field Hockey",
+        "5": "Football",
+        "6": "Handball",
+        "7": "Table Tennis",
+        "8": "Tennis",
+        "9": "Volleyball",
+        "10": "Water Polo",
+    };
+
+    return sports[sportIndex];
+}
+
+/**
+ * Get gender string by gender index.
+ * @param genderIndex Gender index.
+ * @returns Gender string.
+ */
+function getGenderByIndex(genderIndex: string): string | null {
+    if (genderIndex === "0") {
+        return "Men";
+    } else if (genderIndex === "1") {
+        return "Women";
+    }
+
+    return null;
+}
+
+/**
+ * Creates timestamp for validation.
+ * @param startTime Match start time.
+ * @param teamResult1 Match first team result.
+ * @param teamResult2 Match second team result.
+ * @returns Timestamp.
+ */
+function createTimestamp(startTime: number, teamResult1: number, teamResult2: number): string | null {
+    if (teamResult1 === undefined || teamResult1 === null || teamResult2 === undefined || teamResult2 === null) {
+        return null;
+    }
+
+    return (startTime + Number(`${10000 + teamResult1}${10000 + teamResult2}`)).toString();
 }

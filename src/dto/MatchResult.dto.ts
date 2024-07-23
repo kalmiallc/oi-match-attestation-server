@@ -230,7 +230,7 @@ export class MatchResult_RequestBody {
     /**
      * teams playing the game, divided with comma (example: England,Slovenia)
      */
-    @ApiProperty({ description: `teams playing the game, divided with comma (example: England;Slovenia)`, example: "England,Slovenia" })
+    @ApiProperty({ description: `teams playing the game, divided with comma (example: England,Slovenia)`, example: "England,Slovenia" })
     teams: string;
 }
 export class MatchResult_Request {

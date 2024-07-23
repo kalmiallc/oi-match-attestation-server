@@ -7,7 +7,6 @@ import configuration from "./config/configuration";
 import { WEBMatchResultVerifierController } from "./controller/web/web-match-result-verifier.controller";
 import { WEBMatchResultVerifierService } from "./service/web/web-match-result-verifier.service";
 
-
 @Module({
     imports: [
         ConfigModule.forRoot({
