@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
-import googleIt from "google-it";
-import JSON5 from "json5";
-import moment from "moment";
+import { parse as Json5parse } from "json5";
+import * as moment from "moment";
 import OpenAI from "openai";
 import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
 import {
@@ -97,12 +97,10 @@ export class WEBMatchResultVerifierService {
         try {
             responseBody = await prepareResponseBody(fixedRequest.requestBody);
             if (responseBody.result !== "0" && ["1", "2", "3"].includes(responseBody.result)) {
-                console.log("IS VALID");
                 status = AttestationResponseStatus.VALID;
             }
 
             if (!responseBody.timestamp) {
-                console.log("SET TO INVALID");
                 status = AttestationResponseStatus.INVALID;
             }
         } catch (error) {
@@ -204,7 +202,6 @@ async function getMatchResults(
     const sport = getSportByIndex(sportIndex);
     const gender = getGenderByIndex(genderIndex);
     const choices = [...teams, "DRAW", "NO_RESULT"];
-
     const date = new Date(Number(startTime) * 1000);
     const dateString = date.toISOString().split("T")[0];
 
@@ -212,6 +209,7 @@ async function getMatchResults(
     try {
         const options = {};
 
+        const googleIt = require("google-it");
         const results = await googleIt({
             options,
             query: `${teams.join(" vs ")} olympics 2024 ${gender} ${sport} ${moment(dateString).format("DD.MM.YYYY")}`,
@@ -277,7 +275,10 @@ async function getMatchResults(
             },
         );
 
-        results = JSON5.parse(response?.choices[0]?.message?.content || "");
+        const data = response?.choices[0]?.message?.content || null;
+        if (data) {
+            results = Json5parse(data);
+        }
     } catch (error) {
         console.log("Error while parsing results from Open AI: ");
         console.log(error);
@@ -292,7 +293,7 @@ async function getMatchResults(
     }
 
     const winner = parseWinner(results.result, teams);
-    const ts = createTimestamp(Number(startTime), results.teamResult1, results.teamResult2);
+    const ts = createTimestamp(startTime, results.teamResult1, results.teamResult2);
 
     return { winner, ts };
 }
@@ -364,10 +365,25 @@ function getGenderByIndex(genderIndex: string): string | null {
  * @param teamResult2 Match second team result.
  * @returns Timestamp.
  */
-function createTimestamp(startTime: number, teamResult1: number, teamResult2: number): string | null {
-    if (teamResult1 === undefined || teamResult1 === null || teamResult2 === undefined || teamResult2 === null) {
+function createTimestamp(startTime: string, teamResult1: string, teamResult2: string): string | null {
+    if (teamResult1 === "" || teamResult2 === "") {
         return null;
     }
 
-    return (startTime + Number(`${10000 + teamResult1}${10000 + teamResult2}`)).toString();
+    const results1 = Number(teamResult1);
+    const results2 = Number(teamResult2);
+    if (!isNumber(results1) || !isNumber(results2)) {
+        return null;
+    }
+
+    return (Number(startTime) + Number(`${10000 + Number(results1)}${10000 + Number(results2)}`)).toString();
+}
+
+/**
+ * Checks if given value is a number.
+ * @param value Value to check.
+ * @returns Boolean.
+ */
+function isNumber(value: any): boolean {
+    return typeof value === "number" && !isNaN(value);
 }
