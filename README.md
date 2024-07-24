@@ -8,15 +8,6 @@ This template can be used to implement an verifier server that implements the re
 
 This template was created using [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-
-## Pre-requisites
-
-To run this specific Flare verifier used, for match results verifying you need to create your onw [Open AI API](https://platform.openai.com/docs/overview) account and obtain a new API key, since this verifier uses AI to conclude the results of verification. You need to add the obtained API key in the environment of the application as:
-
-```bash
-OPEN_AI_API_KEY=open_ai_api_key
-```
-
 ## Installation
 
 ```bash

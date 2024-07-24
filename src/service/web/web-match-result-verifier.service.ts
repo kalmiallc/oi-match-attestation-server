@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { readFileSync } from "fs";
-import { parse as Json5parse } from "json5";
-import * as moment from "moment";
-import OpenAI from "openai";
 import { EncodedRequestResponse, MicResponse } from "../../dto/generic.dto";
 import {
     AttestationResponseDTO_MatchResult_Response,
@@ -17,6 +14,7 @@ import { AttestationDefinitionStore } from "../../external-libs/ts/AttestationDe
 import { AttestationResponseStatus } from "../../external-libs/ts/AttestationResponse";
 import { ExampleData } from "../../external-libs/ts/interfaces";
 import { MIC_SALT, ZERO_BYTES_32, encodeAttestationName, serializeBigInts } from "../../external-libs/ts/utils";
+import { getEventResults } from "../../lib/olympics-api";
 
 @Injectable()
 export class WEBMatchResultVerifierService {
@@ -174,7 +172,7 @@ export class WEBMatchResultVerifierService {
  * @returns  Body of the response
  */
 async function prepareResponseBody(requestBody: MatchResult_RequestBody): Promise<MatchResult_ResponseBody> {
-    const results = await getMatchResults(requestBody.teams, requestBody.gender, requestBody.sport, requestBody.date);
+    const results = await getEventResults(requestBody.teams, requestBody.gender, requestBody.sport, requestBody.date);
 
     const responseBody = {
         timestamp: results.ts || "",
@@ -182,208 +180,4 @@ async function prepareResponseBody(requestBody: MatchResult_RequestBody): Promis
     } as MatchResult_ResponseBody;
 
     return responseBody;
-}
-
-/**
- * Returns match results.
- * @param teamsString Teams string.
- * @param genderIndex Gender index.
- * @param sportIndex Sport index.
- * @param startTime Match start time.
- * @returns Match results.
- */
-async function getMatchResults(
-    teamsString: string,
-    genderIndex: string,
-    sportIndex: string,
-    startTime: string,
-): Promise<{ winner: string | null; ts: string | null }> {
-    const teams = teamsString.split(",");
-    const sport = getSportByIndex(sportIndex);
-    const gender = getGenderByIndex(genderIndex);
-    const choices = [...teams, "DRAW", "NO_RESULT"];
-    const date = new Date(Number(startTime) * 1000);
-    const dateString = date.toISOString().split("T")[0];
-
-    const articles = [];
-    try {
-        const options = {};
-
-        const googleIt = require("google-it");
-        const results = await googleIt({
-            options,
-            query: `${teams.join(" vs ")} olympics 2024 ${gender} ${sport} ${moment(dateString).format("DD.MM.YYYY")}`,
-            limit: 10,
-            disableConsole: true,
-        });
-        for (const result of results) {
-            const article = {
-                title: result.title,
-                text: result.snippet,
-            };
-
-            articles.push(article);
-        }
-    } catch (error) {
-        console.log("Error while getting event results: ");
-        console.log(error);
-
-        return { winner: null, ts: null };
-    }
-
-    if (!articles.length) {
-        console.log("No results articles found for the given event.");
-        return { winner: null, ts: null };
-    }
-
-    let results = null;
-    try {
-        const openAiClient = new OpenAI({
-            organization: process.env.OPEN_AI_ORGANIZATION_ID,
-            apiKey: process.env.OPEN_AI_API_KEY,
-        });
-
-        const response = await openAiClient.chat.completions.create(
-            {
-                model: "gpt-4o",
-                temperature: 0,
-                response_format: {
-                    type: "json_object",
-                },
-                messages: [
-                    {
-                        role: "system",
-                        content: `CURRENT SYSTEM DATE AND TIME (YYYY-MM-DD HH:mm:ss): "${moment().format("YYYY-MM-DD HH:mm:ss")}`,
-                    },
-                    {
-                        role: "user",
-                        content: `From the following news articles obtain who won the match (${teams.join(
-                            " vs ",
-                        )}). Return one of the following values: ${choices
-                            .map((c) => `"${c}"`)
-                            .join(
-                                ", ",
-                            )}. Return "NO_RESULTS" if the actual result of the match cannot be determined or if the result is ambiguous. Result should be in the RFC8259 compliant JSON response following this format without deviation: { "result": "sport event result value from the list of possible values", "teamResult1": "score/points of the first listed team", "teamResult2": "score/points of the second listed team" }. Articles: ${JSON.stringify(
-                            articles,
-                        )}`,
-                    },
-                ],
-            },
-            {
-                timeout: 60 * 1000, // 1 minute.
-                maxRetries: 3,
-            },
-        );
-
-        const data = response?.choices[0]?.message?.content || null;
-        if (data) {
-            results = Json5parse(data);
-        }
-    } catch (error) {
-        console.log("Error while parsing results from Open AI: ");
-        console.log(error);
-
-        return { winner: null, ts: null };
-    }
-
-    if (!results || !results?.result) {
-        console.log("No results obtained from Open AI.");
-
-        return { winner: null, ts: null };
-    }
-
-    const winner = parseWinner(results.result, teams);
-    const ts = createTimestamp(startTime, results.teamResult1, results.teamResult2);
-
-    return { winner, ts };
-}
-
-/**
- * Parses winner from obtained results.
- * @param result Obtained results.
- * @param teams Event teams.
- * @returns Winner index.
- */
-function parseWinner(result: string, teams: string[]): string | null {
-    if (result === teams[0]) {
-        return "1";
-    }
-
-    if (result === teams[1]) {
-        return "2";
-    }
-
-    if (result === "DRAW") {
-        return "3";
-    }
-
-    return null;
-}
-
-/**
- * Get sport string by sport index.
- * @param sportIndex Sport index.
- * @returns Sport string.
- */
-function getSportByIndex(sportIndex: string): string | null {
-    const sports: { [key: string]: string } = {
-        "0": "Basketball",
-        "1": "Basketball 3x3",
-        "2": "Badminton",
-        "3": "Beach Volley",
-        "4": "Field Hockey",
-        "5": "Football",
-        "6": "Handball",
-        "7": "Table Tennis",
-        "8": "Tennis",
-        "9": "Volleyball",
-        "10": "Water Polo",
-    };
-
-    return sports[sportIndex];
-}
-
-/**
- * Get gender string by gender index.
- * @param genderIndex Gender index.
- * @returns Gender string.
- */
-function getGenderByIndex(genderIndex: string): string | null {
-    if (genderIndex === "0") {
-        return "Men";
-    } else if (genderIndex === "1") {
-        return "Women";
-    }
-
-    return null;
-}
-
-/**
- * Creates timestamp for validation.
- * @param startTime Match start time.
- * @param teamResult1 Match first team result.
- * @param teamResult2 Match second team result.
- * @returns Timestamp.
- */
-function createTimestamp(startTime: string, teamResult1: string, teamResult2: string): string | null {
-    if (teamResult1 === "" || teamResult2 === "") {
-        return null;
-    }
-
-    const results1 = Number(teamResult1);
-    const results2 = Number(teamResult2);
-    if (!isNumber(results1) || !isNumber(results2)) {
-        return null;
-    }
-
-    return (Number(startTime) + results1 + results2).toString();
-}
-
-/**
- * Checks if given value is a number.
- * @param value Value to check.
- * @returns Boolean.
- */
-function isNumber(value: any): boolean {
-    return typeof value === "number" && !isNaN(value);
 }
