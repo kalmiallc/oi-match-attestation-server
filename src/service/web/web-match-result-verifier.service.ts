@@ -376,7 +376,7 @@ function createTimestamp(startTime: string, teamResult1: string, teamResult2: st
         return null;
     }
 
-    return (Number(startTime) + Number(`${10000 + Number(results1)}${10000 + Number(results2)}`)).toString();
+    return (Number(startTime) + results1 + results2).toString();
 }
 
 /**
