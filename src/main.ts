@@ -11,7 +11,8 @@ async function bootstrap() {
     app.use(helmet());
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-    app.setGlobalPrefix(process.env.APP_BASE_PATH ?? "");
+    const basePath = process.env.APP_BASE_PATH ?? "";
+    app.setGlobalPrefix(basePath);
 
     const config = new DocumentBuilder()
         .setTitle("Verifier server template")
@@ -20,7 +21,7 @@ async function bootstrap() {
         .setVersion("1.0")
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("api", app, document);
+    SwaggerModule.setup(`${basePath}/api`, app, document);
 
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
     console.log(`Your template is available on PORT: ${PORT}`);
