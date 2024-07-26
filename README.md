@@ -86,6 +86,19 @@ $ yarn test:e2e
 $ yarn test:cov
 ```
 
+
+## Using the pre-built docker image
+
+Pull the docker image:
+```
+docker pull itkalmia/oi-match-attestation-server
+```
+
+Start the docker image with your environment variables:
+```
+docker run --name oi-match-server -e PORT=4500 -e API_KEYS=API_KEY_1,API_KEY_2,API_KEY_3 -p 4500:4500 -d itkalmia/oi-match-attestation-server
+```
+
 ## License
 
 This project is [MIT licensed](LICENSE.md).

@@ -77,9 +77,6 @@ async function getSchedule(discipline: string): Promise<any[]> {
  * @returns Timestamp.
  */
 function createTimestamp(startTime: string, teamScoreA: string, teamScoreB: string): string | null {
-    console.log(teamScoreA);
-    console.log(teamScoreB);
-
     if (teamScoreA === "" || teamScoreB === "") {
         return null;
     }
@@ -169,11 +166,6 @@ export async function getEventResults(
     if (!event) {
         return { winner: null, ts: null };
     }
-
-    console.log(JSON.stringify(event, null, 2));
-
-    console.log(toUtcTimestamp(event.startDate));
-    console.log(startTime);
 
     const resultsA = event.competitors.find((c: any) => c.name === teamA).results;
     const resultsB = event.competitors.find((c: any) => c.name === teamB).results;
