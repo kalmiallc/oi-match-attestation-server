@@ -161,7 +161,11 @@ export async function getEventResults(
     }
 
     const event = events.find(
-        (e) => e.status === "FINISHED" && e.genderCode === genderCode && toUtcTimestamp(e.startDate) === startTime && validateTeams(e, teamA, teamB),
+        (e) =>
+            e.status === "FINISHED" &&
+            e.genderCode === genderCode &&
+            (toUtcTimestamp(e.startDate) === startTime || (Number(toUtcTimestamp(e.startDate)) + 1).toString() === startTime) &&
+            validateTeams(e, teamA, teamB),
     );
     if (!event) {
         return { winner: null, ts: null };
