@@ -1,5 +1,5 @@
 
-## Olyimpics match result verifier server
+# Olympics Prediction Showcase - Contract result verifier server
 
 <p align="center">
   <a href="https://flare.network/" target="blank"><img src="https://flare.network/wp-content/uploads/Artboard-1-1.svg" width="400" height="300" alt="Flare Logo" /></a>
@@ -7,6 +7,15 @@
 
 This repository contains verifier server for the Olympics match results data.
 The results are gained from the Official Olympics page <https://olympics.com/en/paris-2024/schedule>
+
+The complete showcase consists of four repositories:
+
+- [Prediction smart contract](https://github.com/kalmiallc/oi-prediction-smartcontract)
+- [Front-end application](https://github.com/kalmiallc/oi-prediction-webapp)
+- [Backend application](https://github.com/kalmiallc/oi-prediction-backend) which calls the verification provider API for verification
+- [Verification server](https://github.com/kalmiallc/oi-match-attestation-server)
+
+The complete guide can be found [here](https://github.com/kalmiallc/oi-flare-prediction-instructions)
 
 ### Attestation Type Details
 
